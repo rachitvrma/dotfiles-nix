@@ -205,6 +205,7 @@ git clone <your-pass-store-remote> ~/.password-store
 
 - *[[https://github.com/nix-community/awesome-nix][awesome-nix]]* --- community-maintained master list.
 - *[[https://ianthehenry.com/posts/how-to-learn-nix/][How to Learn Nix]]* --- the language specifically, not NixOS or flakes.
+- *[[https://www.vimjoyer.com/course/][VimJoyer's Interactive Course]]* -- VimJoyer's game-like interactive course on Nix.
 
 ** Video
 

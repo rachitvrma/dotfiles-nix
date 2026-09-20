@@ -279,6 +279,12 @@
                   keyword = "ghdot";
                   url = "https://github.com/rachitvrma/dotfiles";
                 }
+                # Bluesky
+                {
+                  name = "BlueSky";
+                  keyword = "bsky";
+                  url = "https://bsky.app/";
+                }
 
                 {
                   name = "Claude.Ai";
@@ -415,6 +421,7 @@
                   icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
                   definedAliases = [ "@no" ];
                 };
+
                 home-manager-options = {
                   name = "Home-Manager Options";
                   # https://search.nixos.org/options?channel=unstable&query=systemd&source=home_manager&type=options
@@ -444,6 +451,28 @@
                   icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
                   definedAliases = [ "@hm" ];
                 };
+                home-manager-extranix-options = {
+                  name = "Home-Manager ExtraNix Options";
+                  # https://home-manager-options.extranix.com/?query={searchTerms}&release=master
+                  urls = [
+                    {
+                      template = "https://home-manager-options.extranix.com/";
+                      params = [
+                        {
+                          name = "query";
+                          value = "{searchTerms}";
+                        }
+                        {
+                          name = "release";
+                          value = "master";
+                        }
+                      ];
+                    }
+                  ];
+                  icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                  definedAliases = [ "@hmxtra" ];
+                };
+
                 nixos-wiki = {
                   name = "NixOS Wiki";
                   urls = [ { template = "https://wiki.nixos.org/w/index.php?search={searchTerms}"; } ];

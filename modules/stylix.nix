@@ -3,16 +3,18 @@ let
   commonStylix = pkgs: config: {
     stylix = {
       enable = true;
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
-
+      # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
       image = pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/rachitvrma/Wallpapers/main/catto.jpg";
         hash = "sha256-J3jOuXOjPRh10/r1psNNe2F2kb2ruyRtQ++B27CXPaU=";
       };
 
-      override = {
-        base00 = "141617";
-      };
+      /*
+            override = {
+              base00 = "141617";
+            };
+      */
 
       polarity = "dark";
 
@@ -22,14 +24,27 @@ let
         size = 32;
       };
 
-      icons = {
-        enable = true;
-        dark = "Gruvbox-Plus-Dark";
-        light = config.stylix.icons.dark;
-        package = pkgs.gruvbox-plus-icons.override {
-          folder-color = "purple";
-        };
-      };
+      icons =
+        let
+          /*
+            gruvbox = {
+              dark = "Gruvbox-Plus-Dark";
+              light = config.stylix.icons.dark;
+              package = pkgs.gruvbox-plus-icons.override {
+                folder-color = "purple";
+              };
+            };
+          */
+          papirus = {
+            dark = "Papirus-Dark";
+            light = "Papirus-Light";
+            package = pkgs.papirus-icon-theme.override { color = "blue"; };
+          };
+        in
+        {
+          enable = true;
+        }
+        // papirus;
 
       fonts = {
         serif = {
@@ -43,12 +58,14 @@ let
           name = "Noto Color Emoji";
         };
       };
-      opacity = rec {
-        desktop = 0.92;
-        terminal = desktop;
-        popups = desktop;
-        applications = desktop;
-      };
+      /*
+            opacity = rec {
+              desktop = 0.92;
+              terminal = desktop;
+              popups = desktop;
+              applications = desktop;
+            };
+      */
     };
   };
 in

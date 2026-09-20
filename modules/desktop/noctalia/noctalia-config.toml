@@ -109,7 +109,7 @@ active_monitor_only = true
 # background_opacity = 0.84999998100101948
 enabled = true
 launcher_position = "end"
-pinned = ["firefox", "footclient", "emacsclient", "pcmanfm", "vesktop"]
+pinned = ["firefox", "rio", "emacsclient", "pcmanfm", "vesktop"]
 reserve_space = false
 show_dots = true
 smart_auto_hide = true
@@ -131,6 +131,12 @@ timeout = 900.0
 action = "screen_off"
 enabled = true
 timeout = 660.0
+
+[keybinds]
+down = ["Down", "Ctrl+n"]
+left = ["Left", "Ctrl+b"]
+right = ["Right", "Ctrl+f"]
+up = ["Up", "Ctrl+p"]
 
 [location]
 auto_locate = true
@@ -204,6 +210,8 @@ enabled = true
 
 [notification]
 # background_opacity = 0.94999999999999996
+# Switch DND for not being disturbed by notifications
+layer = "overlay"
 
 [osd]
 # background_opacity = 0.94999999999999996

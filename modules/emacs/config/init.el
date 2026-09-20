@@ -153,7 +153,8 @@
 (use-package nerd-icons)
 
 (use-package nerd-icons-dired
-  :hook (dired-mode . nerd-icons-dired-mode))
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
 
 (use-package nerd-icons-ibuffer
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
@@ -428,6 +429,18 @@
   :custom
   (dired-omit-files "^\\."))
 
+(use-package dired-preview
+  :ensure nil
+  :hook (dired-mode . dired-preview-mode)
+  ;; or, for all Dired buffers unconditionally:
+  ;; :init (dired-preview-global-mode 1)
+  :custom
+  (dired-preview-delay 0.7)
+  (dired-preview-max-size (expt 2 20))
+  (dired-preview-ignored-extensions-regexp
+   (concat "\\."
+           "\\(gz\\|zst\\|tar\\|xz\\|rar\\|zip\\|iso\\|epub\\)")))
+
 (use-package ibuffer
   :ensure nil
   :bind ("C-x C-b" . ibuffer)
@@ -519,7 +532,8 @@
   :bind ("M-o" . ace-window)
   :custom
   ;; Mapped specifically to the Colemak-DH home row
-  (aw-keys '(?a ?r ?s ?t ?g ?m ?n ?e ?i ?o)))
+  (aw-keys '(?a ?r ?s ?t ?g ?m ?n ?e ?i ?o))
+  (aw-scope 'frame))
 
 ;; which-key is built into Emacs 30
 (use-package which-key
@@ -727,44 +741,6 @@
       (?h . "HACK"))
     "Default mapping of narrow and keywords."))
 
-(use-package neotree
-  ;; A common convention is F8 for the sidebar toggle, but you can
-  ;; adjust this to a comfortable C-c binding if you prefer.
-  :bind (("<f8>" . neotree-toggle)
-         ("C-c d" . neotree-dir))
-  :custom
-  ;; Automatically find and highlight the current file in the sidebar
-  ;; when Neotree is toggled open.
-  (neo-smart-open t)
-
-  ;; Use 'nerd-icons' for the file tree since you already have them
-  ;; configured. (Falls back to arrows in the terminal).
-  (neo-theme (if (display-graphic-p) 'nerd-icons 'arrow))
-
-  ;; Set a comfortable fixed width for the sidebar
-  (neo-window-width 30)
-  (neo-window-fixed-size nil)
-
-  ;; Show hidden dotfiles by default
-  (neo-show-hidden-files t)
-
-  ;; Uncomment this if you want the sidebar to automatically close
-  ;; the moment you open a file.
-  ;; (neo-autoclose t)
-
-  :config
-  ;; Prevent the mode-line from feeling cluttered by overriding its format
-  ;; inside the Neotree buffer
-  (setq-default neo-mode-line-type 'none))
-
-(use-package multiple-cursors
-  :bind (("C-S-c C-S-c" . mc/edit-lines)
-         ("C->"         . mc/mark-next-like-this)
-         ("C-<"         . mc/mark-previous-like-this)
-         ("C-c C-<"     . mc/mark-all-like-this)
-         ("C-M->"       . mc/skip-to-next-like-this)
-         ("C-M-<"       . mc/skip-to-previous-like-this)))
-
 (use-package pomo-cat
   :custom
   (pomo-cat-use-dedicated-frame t))
@@ -783,6 +759,29 @@
 (use-package direnv
   :config
   (direnv-mode))
+
+(use-package doom-themes
+  :custom
+  ;; Global settings (defaults)
+  (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
+  (doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; for treemacs users
+  (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-neotree-file-icons t) ; Use nerd-icons in neotree
+  :config
+  (load-theme 'doom-one t)
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (nerd-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  ;; (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+
+(use-package neotree
+  :bind ("C-c t" . neotree-toggle))
 
 (use-package meow
   :config

@@ -90,7 +90,7 @@ scale = 1.0 # Logical size is mode size divided by scale
 
 [output.HDMI-A-1]
 enabled = true
-# scale = 0.75
+scale = 0.75
 
 # ────────────────────────────── Workspaces ──────────────────────────────────
 # Choose global workspace behavior. Each output uses dynamic workspaces unless
@@ -270,7 +270,7 @@ follows_mouse = true # Focus the pointer target after pointer motion
 [keybinds]
 
 # Applications and session
-"Mod+T" = "spawn:footclient"
+"Mod+T" = "spawn:systemd-run --user rio"
 "Mod+D" = "spawn:noctalia msg panel-toggle launcher"
 "Mod+Q" = "window-close"
 "Mod+Return" = "spawn:systemd-run --user emacsclient -c -a \"\""
@@ -291,6 +291,9 @@ follows_mouse = true # Focus the pointer target after pointer motion
 "Mod+P" = "window-toggle-pinned"
 "Mod+M" = "window-toggle-maximize-to-edges"
 
+"Print" = "spawn:noctalia msg screenshot-fullscreen"
+"Shift+Print" = "spawn:noctalia msg screenshot-region"
+
 # Overview
 "Mod+O" = { action = "overview-toggle", repeat = false }
 
@@ -304,18 +307,18 @@ follows_mouse = true # Focus the pointer target after pointer motion
 # "Mod+J" = "window-focus-down"
 # "Mod+K" = "window-focus-up"
 # "Mod+L" = "window-focus-right"
-# "Mod+Shift+Left" = "column-move-left"
-# "Mod+Shift+Down" = "window-move-down"
-# "Mod+Shift+Up" = "window-move-up"
-# "Mod+Shift+Right" = "column-move-right"
+"Mod+Shift+H" = "column-move-left"
+"Mod+Shift+J" = "window-move-down"
+"Mod+Shift+K" = "window-move-up"
+"Mod+Shift+L" = "column-move-right"
 "Mod+F" = "window-toggle-maximize"
 "Mod+Ctrl+F" = "window-toggle-fullscreen"
-# "Mod+R" = "window-cycle-width"
-# "Mod+Shift+R" = "window-cycle-width-back"
-# "Mod+Comma" = "window-consume-left"
-# "Mod+Period" = "window-consume-right"
-# "Mod+WheelUp" = "window-focus-left"
-# "Mod+WheelDown" = "window-focus-right"
+"Mod+R" = "window-cycle-width"
+"Mod+Shift+R" = "window-cycle-width-back"
+"Mod+Comma" = "window-consume-left"
+"Mod+Period" = "window-consume-right"
+"Mod+WheelUp" = "window-focus-left"
+"Mod+WheelDown" = "window-focus-right"
 # Mod+1 through Mod+9 switch workspaces. Adding Shift moves the focused window;
 # keypad digits provide the same built-in actions.
 
@@ -334,27 +337,27 @@ follows_mouse = true # Focus the pointer target after pointer motion
 "Mod+U" = "workspace-next"
 "Mod+Shift+I" = "window-move-to-workspace-previous"
 "Mod+Shift+U" = "window-move-to-workspace-next"
-# "Mod+Home" = "column-focus-first"
-# "Mod+End" = "column-focus-last"
-# "Mod+Shift+Home" = "column-move-to-first"
-# "Mod+Shift+End" = "column-move-to-last"
-# "Mod+Bracketright" = "window-focus-next"
-# "Mod+Bracketleft" = "window-focus-previous"
-# "Mod+Shift+Bracketright" = "window-swap-next"
-# "Mod+Shift+Bracketleft" = "window-swap-previous"
-# "Mod+Minus" = "window-modify-width:-0.1"
-# "Mod+Equal" = "window-modify-width:0.1"
-# "Mod+Alt+Minus" = "window-modify-height:-0.1"
-# "Mod+Alt+Equal" = "window-modify-height:0.1"
-# "Mod+Alt+R" = "window-cycle-height"
-# "Mod+Alt+Shift+R" = "window-cycle-height-back"
-# "Mod+Grave" = "window-focus-last"
-# "Mod+BackSpace" = "window-consume-or-expel-left"
-# "Mod+C" = "column-center"
-# "Mod+Shift+C" = "window-center"
-# "Mod+Ctrl+T" = "workspace-set-layout:toggle"
-# "Mod+MouseMiddle" = "layout-scroll-drag"
-# "Mod+Alt+K" = "keyboard-layout-next"
+"Mod+Home" = "column-focus-first"
+"Mod+End" = "column-focus-last"
+"Mod+Shift+Home" = "column-move-to-first"
+"Mod+Shift+End" = "column-move-to-last"
+"Mod+Bracketright" = "window-focus-next"
+"Mod+Bracketleft" = "window-focus-previous"
+"Mod+Shift+Bracketright" = "window-swap-next"
+"Mod+Shift+Bracketleft" = "window-swap-previous"
+"Mod+Minus" = "window-modify-width:-0.1"
+"Mod+Equal" = "window-modify-width:0.1"
+"Mod+Alt+Minus" = "window-modify-height:-0.1"
+"Mod+Alt+Equal" = "window-modify-height:0.1"
+"Mod+Alt+R" = "window-cycle-height"
+"Mod+Alt+Shift+R" = "window-cycle-height-back"
+"Mod+Grave" = "window-focus-last"
+"Mod+BackSpace" = "window-consume-or-expel-left"
+"Mod+C" = "column-center"
+"Mod+Shift+C" = "window-center"
+"Mod+Ctrl+T" = "workspace-set-layout:toggle"
+"Mod+MouseMiddle" = "layout-scroll-drag"
+"Mod+Alt+K" = "keyboard-layout-next"
 
 # Submaps temporarily replace the active keybind layer and can nest. Entry
 # binds must not repeat. A table-form bind can run an action and then reset one
@@ -424,7 +427,7 @@ new_on_top = true             # Put new windows at the top of the stack
 # Blur every window. Keep this selectorless rule first so later matching rules
 # can override individual blur settings.
 [[window_rule]]
-blur = true
+blur = false
 blur_optimized = false
 
 # Noctalia settings

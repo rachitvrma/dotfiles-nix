@@ -19,6 +19,7 @@
       manualEmacsPackages = import ./packages/_default.nix;
     in
     {
+      stylix.targets.emacs.enable = false;
       xdg.configFile = builtins.listToAttrs (
         map (name: {
           name = "emacs/${name}";
@@ -34,6 +35,9 @@
           nixfmt
 
           guile-lsp-server # For guile scheme
+          gnumake # For the make command
+
+          tree-sitter # For cli installation of grammars
 
           # Bash stack
           bash-language-server
@@ -100,16 +104,18 @@
               cdlatex # LaTeX stack
               breadcrumb
               colorful-mode # Highlight Hex colors in programming modes
-              consult
-              consult-eglot
+              consult # Completion engine for Emacs
+              consult-eglot # Completion for LSP
               consult-eglot-embark
               consult-todo # Jump between TODO keywords
-              corfu
-              dash
+              corfu # Completion menu
+              dash # Library functions
               dashboard # A nice startup screen
               diff-hl # See git hunks and changes in the line number area
+              dired-preview # Prot's package for previewing files in Dired
               direnv # Load direnv stuff in emacs
               doom-modeline # A really cool modeline from the doom-emacs stack
+              doom-themes # A collection of really great themes.
               edit-indirect # For editing different regions in different buffers
               editorconfig # Probably a built-in, but still
               eglot # Lsp server configuration, that's actually built-in
@@ -118,7 +124,7 @@
               ement # Matrix client within emacs
               emms
               exec-path-from-shell
-              # ghostel
+              ghostel # Terminal within Emacs
               hl-todo # Highlight tags like TODO, etc.
               indent-bars
               jsdoc
@@ -126,10 +132,9 @@
               magit
               majutsu
               marginalia
-              meow # Best modal editing package in emacs
+              meow # Best modal editing package in emacs with added multicursor support
               meow-tree-sitter # Tree-sitter based meow movement
-              multiple-cursors # This is another beast
-              neotree # The side tree view of current project dir
+              neotree # Side view stuff
               nerd-icons
               nerd-icons-completion
               nerd-icons-corfu
