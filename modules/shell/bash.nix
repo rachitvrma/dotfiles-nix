@@ -14,24 +14,43 @@
         };
       };
     };
-    homeModules.bash = {
-      programs.bash = {
-        enable = true;
-        shellOptions = [
-          "histappend"
-          "extglob"
-          "globstar"
-          "checkjobs"
-          "cdspell"
-        ];
-        historyIgnore = [
-          "ls"
-          "cd"
-          "exit"
-        ];
-        historyControl = [
-          "erasedups"
-        ];
+    homeModules = {
+      bash = {
+        programs = {
+          readline = {
+            enable = true;
+            variables = {
+              expand-tilde = true;
+
+              # https://wiki.archlinux.org/title/Readline
+              colored-stats = true;
+              visible-stats = true;
+              mark-symlinked-directories = true;
+              colored-completion-prefix = true;
+              menu-complete-display-prefix = true;
+              echo-control-characters = true;
+            };
+            includeSystemConfig = true;
+          };
+          bash = {
+            enable = true;
+            shellOptions = [
+              "histappend"
+              "extglob"
+              "globstar"
+              "checkjobs"
+              "cdspell"
+            ];
+            historyIgnore = [
+              "ls"
+              "cd"
+              "exit"
+            ];
+            historyControl = [
+              "erasedups"
+            ];
+          };
+        };
       };
     };
   };
