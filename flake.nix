@@ -41,7 +41,6 @@
 
     stylix = {
       url = "github:nix-community/stylix";
-      # url = "git+file:/home/krish/Projects/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

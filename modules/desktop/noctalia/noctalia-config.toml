@@ -133,10 +133,12 @@ enabled = true
 timeout = 660.0
 
 [keybinds]
+cancel = ["Escape", "Ctrl+g"]
 down = ["Down", "Ctrl+n"]
 left = ["Left", "Ctrl+b"]
 right = ["Right", "Ctrl+f"]
 up = ["Up", "Ctrl+p"]
+
 
 [location]
 auto_locate = true

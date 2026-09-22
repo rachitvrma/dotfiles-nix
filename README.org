@@ -10,7 +10,7 @@
         <p></p>
         <div align="center">
             <a href="https://www.gnu.org/software/emacs/">
-                <img src="https://img.shields.io/badge/emacs-30-purple?style=for-the-badge&logo=gnuemacs&logoColor=e5d0ff&label=emacs&labelColor=202020&color=7F5AB6">
+                <img src="https://img.shields.io/badge/emacs-31-purple?style=for-the-badge&logo=gnuemacs&logoColor=e5d0ff&label=emacs&labelColor=202020&color=7F5AB6">
             </a>
             <a href="https://nixos.org">
                 <img src="https://img.shields.io/badge/NixOS-unstable-blue.svg?style=for-the-badge&labelColor=202020&logo=NixOS&logoColor=89b482&color=89b482">
@@ -32,23 +32,23 @@ Looks matter. It is a good thing to have utility with a good rice.
 
 A single-host NixOS + home-manager configuration, wired together with [[https://flake.parts][flake-parts]] instead of one monolithic =flake.nix=. Every file under [[./modules][modules/]] auto-imports itself via =lib.fileset= --- see [[./flake.nix][flake.nix]] --- so adding a new module is just adding a new =.nix= file, no import list to maintain.
 
-| Util                     | Program used                                                  |
-|--------------------------+---------------------------------------------------------------|
-| Shell                    | Zsh                                                           |
-| Desktop Environment      | GNOME                                                         |
-| Editor                   | Emacs                                                         |
-| Terminal                 | GNOME Console                                                 |
-| Audio                    | PipeWire                                                      |
-| System Monitor           | GNOME System Monitor                                          |
-| Mail                     | (see [[./modules/accounts][accounts]])                                                |
-| Chat                     | Vesktop (Discord) · Emacs ERC (IRC) · Emacs ement.el (Matrix) |
-| File Manager             | Emacs Dired                                                   |
-| RSS Reader               | Newsticker (Emacs)                                            |
-| Theme                    | Stylix --- Gruvbox Material Dark Hard                         |
-| Browser                  | Firefox (hardened) · w3m                                      |
-| Secrets                  | agenix · pass / GPG                                           |
-| Local AI                 | OpenCode + Ollama                                             |
-| Agenda / Task Maintainer | Emacs + org-mode                                              |
+| Util                     | Program used                                                          |
+|--------------------------+-----------------------------------------------------------------------|
+| Shell                    | Bash                                                                  |
+| Desktop Environment      | umbriel (compositor) · Noctalia (shell + greeter)                     |
+| Editor                   | Emacs                                                                 |
+| Terminal                 | Rio                                                                   |
+| Audio                    | PipeWire                                                              |
+| System Monitor           | bottom · htop                                                         |
+| Mail                     | (see [[./modules/accounts][accounts]])                                                        |
+| Chat                     | Vesktop (Discord) · Emacs ERC / rcirc (IRC) · Emacs ement.el (Matrix) |
+| File Manager             | Emacs Dired · PCManFM (GUI fallback)                                  |
+| RSS Reader               | Newsticker (Emacs)                                                    |
+| Theme                    | Stylix --- Gruvbox Material Dark Hard                                 |
+| Browser                  | Firefox (hardened) · w3m                                              |
+| Secrets                  | agenix · pass / GPG                                                   |
+| Local AI                 | OpenCode + Ollama                                                     |
+| Agenda / Task Maintainer | Emacs + org-mode                                                      |
 
 -----
 
@@ -62,11 +62,11 @@ A single-host NixOS + home-manager configuration, wired together with [[https://
 │   ├── accounts/                # email + pass/ripasso
 │   ├── agenix/                  # secrets management + encrypted secrets
 │   ├── browsers/                # Firefox, userChrome/userContent, w3m
-│   ├── desktop/                 # common desktop bits + GNOME
+│   ├── desktop/                 # common desktop bits, umbriel compositor + Noctalia shell
 │   ├── discord/                 # Vesktop + Vencord
 │   ├── emacs/                   # org-tangled Emacs config
 │   ├── hosts/nixpavilion/       # host-specific config, disko layout, hardware scan
-│   ├── shell/                   # zsh + starship
+│   ├── shell/                   # bash + starship
 │   └── users/                   # per-user home-manager entrypoints
 └── TODO.md
 #+end_example
@@ -80,11 +80,13 @@ Every module follows the same shape: a top-level =flake.nixosModules.<name>= and
 | [[./modules/ai.nix][ai.nix]]              | Local coding-assistant stack --- OpenCode wired to a local Ollama server (Qwen2.5-Coder), capped to one loaded model / no parallel requests                                                                                     |
 | [[./modules/stylix.nix][stylix.nix]]          | System-wide theming (Gruvbox Material Dark Hard), fonts, cursor, icons --- shared between NixOS and home-manager                                                                                                                |
 | [[./modules/browsers][browsers/module.nix]] | Privacy-hardened Firefox: telemetry off, forced extensions (uBlock, Dark Reader), custom search engines (Noogle, NixOS/HM options, etc.), vertical tabs, =w3m= as a text-mode fallback with redirect rules to privacy frontends |
+| [[./modules/desktop/noctalia][desktop/noctalia/]]   | #ERROR                                                                                                                                                                                                                          |
 | [[./modules/emacs][emacs/]]              | Literate, org-tangled config (=Config.org= → =init.el=/=early-init.el=); all packages come from Nix, =package.el= disabled entirely                                                                                             |
 | [[./modules/agenix][agenix/module.nix]]   | Encrypted secrets (age) for things like the YouTube Music API client id/secret                                                                                                                                                  |
 | [[./modules/vcs.nix][vcs.nix]]             | Git + Jujutsu, GPG-signed commits, a stack of git aliases (=sync=, =up=, =stsh=, ...)                                                                                                                                           |
 | [[./modules/hosts/nixpavilion][hosts/nixpavilion]]   | The one real host: disko partitioning (LUKS + btrfs subvolumes), hardware scan, kernel params (zswap, Plymouth splash)                                                                                                          |
 | [[./modules/keymap.nix][keymap.nix]]          | System + home-manager keyboard layout (Colemak-DH, ctrl/caps swap)                                                                                                                                                              |
+#+TBLFM: $2=umbriel= compositor + Noctalia shell/greeter, Stylix-synced colors, =wlr-which-key= launcher menus
 
 -----
 

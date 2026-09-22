@@ -3,15 +3,15 @@
     programs = {
       comma = {
         enable = true;
-        enableZshIntegration = true;
+
       };
       television = {
         enable = true;
-        enableZshIntegration = true;
+
       };
       zoxide = {
         enable = true;
-        enableZshIntegration = true;
+
       };
       bat = {
         enable = true;
@@ -28,7 +28,7 @@
   flake.homeModules.shell = { pkgs, ... }: {
     home = {
       shell = {
-        enableZshIntegration = true;
+        enableBashIntegration = true;
         enableShellIntegration = true;
       };
 
@@ -119,7 +119,7 @@
       pay-respects = {
         # TODO: Configure this.
         enable = true;
-        enableZshIntegration = true;
+
       };
       clock-rs = {
         enable = true;
@@ -144,7 +144,7 @@
       };
       devenv = {
         enable = true;
-        enableZshIntegration = true;
+
       };
       jq.enable = true;
       bat = {
@@ -167,13 +167,13 @@
 
       nix-your-shell = {
         enable = true;
-        enableZshIntegration = true;
+
         nix-output-monitor.enable = true;
       };
 
       carapace = {
         enable = true;
-        enableZshIntegration = true;
+
       };
 
       fd.enable = true;
@@ -181,7 +181,7 @@
       eza = {
         enable = true;
         colors = "auto";
-        enableZshIntegration = true;
+
         git = false; # Takes really long to load big git repos
         icons = "auto";
         extraOptions = [
@@ -194,12 +194,12 @@
       vivid = {
         enable = true;
         colorMode = "24-bit";
-        enableZshIntegration = true;
+
       };
 
       fzf = {
         enable = true;
-        enableZshIntegration = true;
+
         defaultOptions = [
           "--height 40%"
           "--prompt ⟫"
@@ -212,7 +212,7 @@
 
       television = {
         enable = true;
-        enableZshIntegration = true;
+
         extraPackages = with pkgs; [
           poppler-utils # for pdftotext command
           figlet # for figlet-fonts
@@ -235,7 +235,7 @@
 
       zoxide = {
         enable = true;
-        enableZshIntegration = true;
+
       };
     };
 

@@ -101,8 +101,15 @@
               apheleia
               aria2
               auctex # LaTeX stack
+
+              # Avy collection
+              avy
+              avy-embark-collect
+              avy-zap
+              avy-act
+
               cdlatex # LaTeX stack
-              breadcrumb
+              breadcrumb # IDE like top bar for picking out symbols
               colorful-mode # Highlight Hex colors in programming modes
               consult # Completion engine for Emacs
               consult-eglot # Completion for LSP
@@ -132,8 +139,7 @@
               magit
               majutsu
               marginalia
-              meow # Best modal editing package in emacs with added multicursor support
-              meow-tree-sitter # Tree-sitter based meow movement
+              multiple-cursors
               neotree # Side view stuff
               nerd-icons
               nerd-icons-completion
@@ -151,8 +157,11 @@
               posframe # NOTE IDK what it does... Just a dependency
               pulsar # make it shine when you change point
               rainbow-delimiters
+              undo-fu # Part of undo-tree stack
+              undo-fu-session # Part of undo-tree stack
               use-package
               vertico
+              vundo # Part of undo-tree stack
               which-key
               zathura # Open links to documents in zathura
               zoxide

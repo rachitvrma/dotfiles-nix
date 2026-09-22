@@ -14,7 +14,6 @@
     homeModules.starship = { lib, ... }: {
       programs.starship = {
         enable = true;
-        enableZshIntegration = true;
         presets = [ "nerd-font-symbols" ];
         settings = lib.mkAfter (lib.importTOML ./starship.toml);
       };

@@ -27,7 +27,6 @@
 
     services.gpg-agent = {
       enable = true;
-      enableZshIntegration = true;
       enableScDaemon = false;
       grabKeyboardAndMouse = true;
       defaultCacheTtl = 3600;

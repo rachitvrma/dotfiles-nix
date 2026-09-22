@@ -1,6 +1,10 @@
-{ self, inputs, ... }: {
+{ self, inputs, ... }:
+let
+  dotfilesDir = "/home/krish/etc/nixos";
+in
+{
   flake.nixosConfigurations.nixpavilion = inputs.nixpkgs.lib.nixosSystem {
-    specialArgs = { inherit inputs self; };
+    specialArgs = { inherit inputs self dotfilesDir; };
     modules =
       (builtins.attrValues self.nixosModules) # Import nixosModules
       ++ [
@@ -8,7 +12,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit inputs self; };
+          home-manager.extraSpecialArgs = { inherit inputs self dotfilesDir; };
           home-manager.users.krish.imports = builtins.attrValues self.homeModules; # Import homeModules
           home-manager.backupFileExtension = "hm-bak";
         }
