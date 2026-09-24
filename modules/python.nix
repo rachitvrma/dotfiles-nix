@@ -11,7 +11,7 @@
             facecolor = "black";
             grid = true;
           };
-          backend = "qt5agg";
+          backend = "TkAgg";
           grid = {
             color = "FF9900";
           };

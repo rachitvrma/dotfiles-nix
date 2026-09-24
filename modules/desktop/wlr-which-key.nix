@@ -25,38 +25,32 @@
       {
         enable = true;
         settings = commonSettings // {
-          menu = [
-            {
-              key = "p";
-              desc = "Power";
-              submenu =
-                let
-                  session-cmd = cmd: "noctalia msg session ${cmd}";
-                in
-                [
-                  {
-                    key = "l";
-                    desc = "Lock";
-                    cmd = session-cmd "lock";
-                  }
-                  {
-                    key = "o";
-                    desc = "Off";
-                    cmd = session-cmd "shutdown";
-                  }
-                  {
-                    key = "r";
-                    desc = "Reboot";
-                    cmd = session-cmd "reboot";
-                  }
-                  {
-                    key = "s";
-                    desc = "Sleep";
-                    cmd = session-cmd "lock-and-suspend";
-                  }
-                ];
-            }
-          ];
+          menu =
+            let
+              session-cmd = cmd: "noctalia msg session ${cmd}";
+            in
+            [
+              {
+                key = "l";
+                desc = "Lock";
+                cmd = session-cmd "lock";
+              }
+              {
+                key = "p";
+                desc = "Power-Off";
+                cmd = session-cmd "shutdown";
+              }
+              {
+                key = "r";
+                desc = "Reboot";
+                cmd = session-cmd "reboot";
+              }
+              {
+                key = "s";
+                desc = "Sleep";
+                cmd = session-cmd "lock-and-suspend";
+              }
+            ];
         };
 
         extraMenus = {

@@ -44,8 +44,7 @@
         defaultApplications = {
           "image/jpeg" = "swayimg.desktop";
           "video/*" = "mpv.desktop";
-          # NOTE: I use foliate now
-          # "application/vnd.comicbook+zip" = "org.pwmt.zathura.desktop";
+          "application/vnd.comicbook+zip" = "org.pwmt.zathura.desktop";
         };
       };
       portal = {

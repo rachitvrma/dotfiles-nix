@@ -194,6 +194,24 @@
             "<ctrl-g>" = "mode-leave";
           };
         };
+
+        searchEngines = {
+          w = "https://en.wikipedia.org/wiki/Special:Search?search={}&go=Go&ns0=1";
+          aw = "https://wiki.archlinux.org/?search={}";
+
+          # Nix stack
+          nw = "https://wiki.nixos.org/index.php?search={}";
+          no = "https://search.nixos.org/options?channel=unstable&query={}";
+          np = "https://search.nixos.org/packages?channel=unstable&query={}";
+
+          g = "https://www.google.com/search?hl=en&q={}";
+        };
+
+        quickmarks = {
+          claude = "https://claude.ai/";
+          ghn = "https://github.com/notifications";
+          ghdots = "https://github.com/rachitvrma/dotfiles";
+        };
       };
   };
 }

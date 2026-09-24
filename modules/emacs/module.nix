@@ -119,7 +119,6 @@
               dash # Library functions
               dashboard # A nice startup screen
               diff-hl # See git hunks and changes in the line number area
-              dired-preview # Prot's package for previewing files in Dired
               direnv # Load direnv stuff in emacs
               doom-modeline # A really cool modeline from the doom-emacs stack
               doom-themes # A collection of really great themes.
@@ -131,7 +130,8 @@
               ement # Matrix client within emacs
               emms
               exec-path-from-shell
-              ghostel # Terminal within Emacs
+              # ghostel # Terminal within Emacs
+              helpful # A better *help* buffer
               hl-todo # Highlight tags like TODO, etc.
               indent-bars
               jsdoc
@@ -153,6 +153,7 @@
               orderless
               org-auto-tangle
               page-break-lines
+              password-store # An interface within emacs to interact with the GNU pass-cli
               pomo-cat # A cute kitty pomodoro timer
               posframe # NOTE IDK what it does... Just a dependency
               pulsar # make it shine when you change point

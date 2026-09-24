@@ -5,6 +5,7 @@
       programs = {
         bash = {
           enable = true;
+          # blesh.enable = true;
           undistractMe = {
             enable = true;
             playSound = true;

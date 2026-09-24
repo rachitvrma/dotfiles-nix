@@ -43,6 +43,12 @@
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Download the wallpaper repo and then use it, otherwise it will fail
+    wallpapers = {
+      url = "git+file:///home/krish/Pictures/Wallpapers";
+      flake = false;
+    };
   };
 
   outputs =

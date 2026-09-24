@@ -377,7 +377,10 @@
   :mode "\\.json\\'")
 
 (use-package magit
-  :bind ("C-x g" . magit-status))
+  :commands magit-status
+  :bind ("C-x g" . magit-status)
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 (use-package majutsu
   :after magit
@@ -414,8 +417,9 @@
 
 (use-package dired
   :ensure nil
+  :commands (dired dired-jump)
   :custom
-  (dired-listing-switches "-alh --group-directories-first")
+  (dired-listing-switches "-algho --group-directories-first")
   (dired-kill-when-opening-new-dired-buffer t)
   (dired-dwim-target t)
   :hook (dired-mode . dired-hide-details-mode)
@@ -428,18 +432,6 @@
   :hook (dired-mode . dired-omit-mode)
   :custom
   (dired-omit-files "^\\."))
-
-(use-package dired-preview
-  :ensure nil
-  :hook (dired-mode . dired-preview-mode)
-  ;; or, for all Dired buffers unconditionally:
-  ;; :init (dired-preview-global-mode 1)
-  :custom
-  (dired-preview-delay 0.7)
-  (dired-preview-max-size (expt 2 20))
-  (dired-preview-ignored-extensions-regexp
-   (concat "\\."
-           "\\(gz\\|zst\\|tar\\|xz\\|rar\\|zip\\|iso\\|epub\\)")))
 
 (use-package ibuffer
   :ensure nil
@@ -537,6 +529,8 @@
 
 ;; which-key is built into Emacs 30
 (use-package which-key
+  :defer 0
+  :diminish which-key-mode
   :ensure nil
   :config
   (which-key-mode 1))
@@ -714,16 +708,45 @@
 
 (use-package org
   :ensure nil
+  :commands (org-capture org-agenda)
+  :bind
+  (("C-c a" . org-agenda)
+   ("C-c c" . org-capture))
+
+  :custom
+  (org-directory "~/org")
+  (org-agenda-files (list org-directory))
+  (org-default-notes-file (concat org-directory "/notes.org"))
+  (org-capture-templates
+   '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+      "* TODO %?\n  %U\n  %i\n  %a"
+      :empty-lines 1)
+     ("j" "Journal" entry
+      (file+olp+datetree "~/org/journal.org")
+      "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+      :empty-lines 1)
+     ("n" "Note" entry (file+headline org-default-notes-file "Notes")
+      "* %?\n  %i\n  %a")))
+
+  :hook
+  (org-mode . org-indent-mode)
+  (org-mode . variable-pitch-mode)
+
   :config
-  ;; Bring back the <s TAB template expansions
   (require 'org-tempo)
 
-  ;; Add a custom expansion for emacs-lisp.
-  ;; You can change "el" to "e" if you don't mind overriding the default
-  ;; #+begin_example expansion. "el" is a common convention for Emacs Lisp.
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
   (add-to-list 'org-structure-template-alist '("nix" . "src nix")))
+
+(use-package helpful
+  :bind(
+  ("C-h f" . helpful-callable)
+  ("C-h v" . helpful-variable)
+  ("C-h k" . helpful-key)
+  ("C-h x" . helpful-command)
+  ("C-h C-d" . helpful-at-point)
+  ("C-h F" . helpful-function)))
 
 (use-package hl-todo
   :config
@@ -793,6 +816,7 @@
 (use-package undo-fu
   :ensure t
   :bind
+
   (("C-z"   . undo-fu-only-undo)
    ("C-S-z" . undo-fu-only-redo)))
 

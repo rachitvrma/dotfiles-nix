@@ -1,14 +1,11 @@
 { inputs, ... }:
 let
-  commonStylix = pkgs: config: {
+  commonStylix = pkgs: config: lib: {
     stylix = {
       enable = true;
       # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
       base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
-      image = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/rachitvrma/Wallpapers/main/catto.jpg";
-        hash = "sha256-J3jOuXOjPRh10/r1psNNe2F2kb2ruyRtQ++B27CXPaU=";
-      };
+      image = inputs.wallpapers + "/wallhaven-0w9zk6.jpg";
 
       /*
             override = {
@@ -103,12 +100,13 @@ in
         };
       };
     }
-    // (commonStylix pkgs config);
+    // (commonStylix pkgs config lib);
 
   flake.homeModules.stylix =
     {
       config,
       pkgs,
+      lib,
       ...
     }:
     {
@@ -121,5 +119,5 @@ in
         kvantum.enable = true;
       };
     }
-    // (commonStylix pkgs config);
+    // (commonStylix pkgs config lib);
 }

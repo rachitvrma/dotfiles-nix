@@ -277,7 +277,8 @@ follows_mouse = true # Focus the pointer target after pointer motion
 "Mod+E" = "spawn:systemd-run --user pcmanfm"
 
 # Wlr-which-key menus
-"Mod+B" = "spawn:wlr-which-key browsers"
+"Mod+B" = "spawn:wlr-which-key browsers" # Opens the browser menu
+"Mod+X" = "spawn:wlr-which-key"          # Opens the power-menu
 
 # Focus navigation. In overview, Mod+Up/Down retain normal layout focus, so they
 # traverse stacks in the default horizontal layout. Bare Up/Down move between

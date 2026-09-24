@@ -62,6 +62,8 @@
       };
       htop.enable = true;
 
+      swayimg.enable = true;
+
       pomo = {
         enable = true;
         settings = {
