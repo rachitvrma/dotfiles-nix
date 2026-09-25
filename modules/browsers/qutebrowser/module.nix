@@ -205,6 +205,10 @@
           np = "https://search.nixos.org/packages?channel=unstable&query={}";
 
           g = "https://www.google.com/search?hl=en&q={}";
+
+          # YouTube and YouTube music
+          yt = "https://www.youtube.com/results?search_query={}";
+          ytm = "https://music.youtube.com/results?search_query={}";
         };
 
         quickmarks = {

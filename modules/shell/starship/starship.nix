@@ -14,7 +14,7 @@
     homeModules.starship = { lib, ... }: {
       programs.starship = {
         enable = true;
-        presets = [ "nerd-font-symbols" ];
+        presets = [ "pure-preset" ];
         settings = lib.mkAfter (lib.importTOML ./starship.toml);
       };
     };

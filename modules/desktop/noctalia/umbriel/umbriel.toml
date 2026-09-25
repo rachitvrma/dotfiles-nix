@@ -90,7 +90,7 @@ scale = 1.0 # Logical size is mode size divided by scale
 
 [output.HDMI-A-1]
 enabled = true
-scale = 0.75
+# scale = 0.75
 
 # ────────────────────────────── Workspaces ──────────────────────────────────
 # Choose global workspace behavior. Each output uses dynamic workspaces unless
@@ -270,7 +270,7 @@ follows_mouse = true # Focus the pointer target after pointer motion
 [keybinds]
 
 # Applications and session
-"Mod+T" = "spawn:systemd-run --user rio"
+"Mod+T" = "spawn:systemd-run --user xdg-terminal-exec"
 "Mod+D" = "spawn:noctalia msg panel-toggle launcher"
 "Mod+Q" = "window-close"
 "Mod+Return" = "spawn:systemd-run --user emacsclient -c -a \"\""

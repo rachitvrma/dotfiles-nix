@@ -1,5 +1,0 @@
-[effects]
-trail-cursor = true
-trail-cursor-opacity = 0.6
-trail-cursor-decay = [100, 400]
-trail-cursor-start-threshold = 2

@@ -6,10 +6,12 @@
         bash = {
           enable = true;
           # blesh.enable = true;
-          undistractMe = {
-            enable = true;
-            playSound = true;
-          };
+          /*
+            undistractMe = {
+              enable = true;
+              playSound = true;
+            };
+          */
           # enableLsColors = true; # Incompatible with vivid
           completion.enable = true;
         };

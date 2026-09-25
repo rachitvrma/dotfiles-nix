@@ -5,8 +5,7 @@
 # list it below. `epkgs` is threaded through so each package definition
 # gets melpaBuild/fetchFromGitHub/lib etc. via callPackage, same as any
 # other emacsPackages derivation.
-epkgs:
-with epkgs;
-[
+epkgs: with epkgs; [
   (callPackage ./_xdg-launcher.nix { })
+  (callPackage ./_emacs-reader.nix { })
 ]

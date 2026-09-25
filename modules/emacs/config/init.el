@@ -108,20 +108,20 @@
   :hook (org-mode . org-auto-tangle-mode))
 
 (use-package dashboard
-  :init
-  (setq dashboard-startup-banner 'logo
-        initial-buffer-choice #'dashboard-open
-        dashboard-center-content t
-        dashboard-vertically-center-content t
-        dashboard-navigation-cycle t
+  :custom
+  (dashboard-startup-banner 'logo)
+  (initial-buffer-choice #'dashboard-open)
+  (dashboard-center-content t)
+  (dashboard-vertically-center-content t)
+  (dashboard-navigation-cycle t)
 
-        ;; Nerd icons
-        dashboard-display-icons-p t
-        dashboard-icon-type 'nerd-icons
-        dashboard-set-heading-icons t
-        dashboard-set-file-icons t
-        ;; Show shortcuts
-        dashboard-show-shortcuts t)
+  ;; Nerd icons
+  (dashboard-display-icons-p t)
+  (dashboard-icon-type 'nerd-icons)
+  (dashboard-set-heading-icons t)
+  (dashboard-set-file-icons t)
+  ;; Show shortcuts
+  (dashboard-show-shortcuts t)
   :config
   (add-hook 'server-after-make-frame-hook #'dashboard-open)
   (dashboard-setup-startup-hook))
@@ -789,7 +789,7 @@
   (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
   (doom-themes-enable-italic t) ; if nil, italics is universally disabled
   ;; for treemacs users
-  (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-theme "doom-one") ; use "doom-colors" for less minimal icon theme
   (doom-themes-neotree-file-icons t) ; Use nerd-icons in neotree
   :config
   (load-theme 'doom-one t)
