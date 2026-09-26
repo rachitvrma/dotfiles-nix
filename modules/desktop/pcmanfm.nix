@@ -4,6 +4,7 @@
       pcmanfm
       shared-mime-info
       lxmenu-data
+      ntfsprogs
     ];
   };
 }

@@ -1,26 +1,26 @@
 #+begin_html
 <h1 align="center">
-    <div align="center">
-        <img src="./.github/images/nixos.svg" width="100px"/>
-    </div>
-    <br>
-    <p>Rachit's NixOS configuration</p>
-    <img src="https://capsule-render.vercel.app/api?type=waving&height=300&color=0:d3869b,100:89b482&text=Rachit's%20dotfiles&fontColor=202020&fontAlign=50&fontAlignY=38&fontSize=48&animation=fadeIn&desc=NixOS%20%C2%B7%20Home-Manager%20%C2%B7%20flake-parts&descAlign=50&descAlignY=62&descSize=18&descColor=202020" />
-    <div align="center">
-        <p></p>
-        <div align="center">
-            <a href="https://www.gnu.org/software/emacs/">
-                <img src="https://img.shields.io/badge/emacs-31-purple?style=for-the-badge&logo=gnuemacs&logoColor=e5d0ff&label=emacs&labelColor=202020&color=7F5AB6">
-            </a>
-            <a href="https://nixos.org">
-                <img src="https://img.shields.io/badge/NixOS-unstable-blue.svg?style=for-the-badge&labelColor=202020&logo=NixOS&logoColor=89b482&color=89b482">
-            </a>
-            <a href="https://github.com/rachitvrma/dotfiles/blob/main/LICENSE">
-                <img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=GPLv3&colorA=202020&colorB=d3869b&logo=unlicense&logoColor=fbf1c7&%22"/>
-            </a>
-        </div>
-        <br>
-    </div>
+<div align="center">
+<img src="./.github/images/nixos.svg" width="100px"/>
+</div>
+<br>
+<p>Rachit's NixOS configuration</p>
+<img src="https://capsule-render.vercel.app/api?type=waving&height=300&color=0:d3869b,100:89b482&text=Rachit's%20dotfiles&fontColor=202020&fontAlign=50&fontAlignY=38&fontSize=48&animation=fadeIn&desc=NixOS%20%C2%B7%20Home-Manager%20%C2%B7%20flake-parts&descAlign=50&descAlignY=62&descSize=18&descColor=202020" />
+<div align="center">
+<p></p>
+<div align="center">
+<a href="https://www.gnu.org/software/emacs/">
+<img src="https://img.shields.io/badge/emacs-31-purple?style=for-the-badge&logo=gnuemacs&logoColor=e5d0ff&label=emacs&labelColor=202020&color=7F5AB6">
+</a>
+<a href="https://nixos.org">
+<img src="https://img.shields.io/badge/NixOS-unstable-blue.svg?style=for-the-badge&labelColor=202020&logo=NixOS&logoColor=89b482&color=89b482">
+</a>
+<a href="https://github.com/rachitvrma/dotfiles/blob/main/LICENSE">
+<img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=GPLv3&colorA=202020&colorB=d3869b&logo=unlicense&logoColor=fbf1c7&%22"/>
+</a>
+</div>
+<br>
+</div>
 </h1>
 #+end_html
 
@@ -101,16 +101,16 @@ Assumes an installer ISO is already booted. See the [[https://nixos.org/manual/n
 Flakes and the =nix= command aren't on by default:
 
 #+begin_src sh
-sudo -i
-export NIX_CONFIG="experimental-features = nix-command flakes"
+  sudo -i
+  export NIX_CONFIG="experimental-features = nix-command flakes"
 #+end_src
 
 ** ↙️ Clone this repo
 
 #+begin_src sh
-mkdir -p /tmp
-cd /tmp
-git clone --depth=1 https://github.com/rachitvrma/dotfiles.git
+  mkdir -p /tmp
+  cd /tmp
+  git clone --depth=1 https://github.com/rachitvrma/dotfiles.git
 #+end_src
 
 ** 💾 Partition with Disko
@@ -118,18 +118,18 @@ git clone --depth=1 https://github.com/rachitvrma/dotfiles.git
 Run the latest [[https://github.com/nix-community/disko][nix-community/disko]] rather than the nixpkgs-pinned version. Confirm =disko-config.nix= matches the target host (defaults to [[./modules/hosts/nixpavilion][nixpavilion]]):
 
 #+begin_src sh
-cd /tmp/dotfiles/modules/hosts/nixpavilion
-nix run github:nix-community/disko/latest -- --mode destroy,format,mount ./disko-config.nix
+  cd /tmp/dotfiles/modules/hosts/nixpavilion
+  nix run github:nix-community/disko/latest -- --mode destroy,format,mount ./disko-config.nix
 #+end_src
 
 ** 🐧 Install
 
 #+begin_src sh
-mkdir -p /mnt/etc
-cp -r /tmp/dotfiles /mnt/etc/nixos
-nixos-install --no-root-passwd --root /mnt --cores 8 --max-jobs 1 --flake /mnt/etc/nixos#nixpavilion
-umount -R /mnt
-reboot
+  mkdir -p /mnt/etc
+  cp -r /tmp/dotfiles /mnt/etc/nixos
+  nixos-install --no-root-passwd --root /mnt --cores 8 --max-jobs 1 --flake /mnt/etc/nixos#nixpavilion
+  umount -R /mnt
+  reboot
 #+end_src
 
 ** 💻 Post-install
@@ -137,7 +137,7 @@ reboot
 *** Set your password
 
 #+begin_src sh
-passwd $USER
+  passwd $USER
 #+end_src
 
 *** Edit config without =sudo=
@@ -145,10 +145,10 @@ passwd $USER
 Move =/etc/nixos= into your home directory so you can edit and rebuild without root ([[https://wiki.nixos.org/wiki/NixOS_configuration_editors#Editing_as_normal_user][source]]):
 
 #+begin_src sh
-mkdir ~/etc
-sudo mv /etc/nixos ~/etc/
-sudo chown -R $(id -un):users ~/etc/nixos
-sudo ln -s ~/etc/nixos /etc/
+  mkdir ~/etc
+  sudo mv /etc/nixos ~/etc/
+  sudo chown -R $(id -un):users ~/etc/nixos
+  sudo ln -s ~/etc/nixos /etc/
 #+end_src
 
 *** GPG / pass restoration
@@ -160,7 +160,7 @@ sudo ln -s ~/etc/nixos /etc/
 Before wiping the old system:
 
 #+begin_src sh
-gpg --homedir ~/.local/share/gnupg --export-secret-keys --armor > gpg-backup.asc
+  gpg --export-secret-keys --armor > gpg-backup.asc
 #+end_src
 
 Also make sure =~/.password-store= is backed up or pushed to a remote --- the key alone decrypts nothing without the encrypted store itself.
@@ -168,15 +168,10 @@ Also make sure =~/.password-store= is backed up or pushed to a remote --- the ke
 After reinstall, before rebuilding:
 
 #+begin_src sh
-mkdir -p ~/.local/share/gnupg
-gpg --homedir ~/.local/share/gnupg --import gpg-backup.asc
-gpg --homedir ~/.local/share/gnupg --edit-key <keyid> trust   # choose 5 (ultimate)
-git clone <your-pass-store-remote> ~/.password-store
+  gpg --import gpg-backup.asc
+  gpg --edit-key <keyid> trust   # choose 5 (ultimate)
+  git clone <your-pass-store-remote> ~/.password-store
 #+end_src
-
-#+begin_quote
-*Note:* =programs.gpg.homedir= is =~/.local/share/gnupg=, not =~/.gnupg=.
-#+end_quote
 
 * Nix / NixOS / Flakes --- learning resources
 
