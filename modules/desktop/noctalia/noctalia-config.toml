@@ -112,7 +112,8 @@ launcher_position = "end"
 pinned = ["firefox", "kitty", "emacsclient", "pcmanfm", "vesktop"]
 reserve_space = false
 show_dots = true
-smart_auto_hide = true
+show_instance_count = false
+auto_hide = true
 
 [idle]
 behavior_order = ["lock", "screen-off", "lock-and-suspend"]
@@ -248,6 +249,7 @@ auto_sync = true
 
 [shell.panel]
 transparency_mode = "glass"
+polkit_placement = "attached"
 
 [theme]
 custom_palette = "stylix"
@@ -256,6 +258,7 @@ source = "custom"
 
 [wallpaper]
 directory = "/home/krish/Pictures/Wallpapers"
+transition_on_startup = true
 
 [widget.audio_visualizer]
 color_2 = "secondary"

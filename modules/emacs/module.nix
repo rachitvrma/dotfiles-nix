@@ -19,7 +19,7 @@
       manualEmacsPackages = import ./packages/_default.nix;
     in
     {
-      stylix.targets.emacs.enable = false;
+      stylix.targets.emacs.colors.enable = false;
       xdg.configFile = builtins.listToAttrs (
         map (name: {
           name = "emacs/${name}";
@@ -157,6 +157,7 @@
               pomo-cat # A cute kitty pomodoro timer
               posframe # NOTE IDK what it does... Just a dependency
               pulsar # make it shine when you change point
+              pyvenv # For working with python virtual environments
               rainbow-delimiters
               undo-fu # Part of undo-tree stack
               undo-fu-session # Part of undo-tree stack

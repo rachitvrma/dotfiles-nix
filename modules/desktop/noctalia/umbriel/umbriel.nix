@@ -43,26 +43,26 @@
                   variant = config.home.keyboard.variant;
                 };
               };
-              colors = {
-                background = colors.base00;
-                text_primary = colors.base05;
-                text_muted = colors.base04;
-                accent_primary = colors.base0E;
-                accent_secondary = colors.base0A;
-                warning = colors.base09;
-                error = colors.base08;
-                insert_hint = colors.base0D;
-                backdrop = colors.base00;
-                shadow = colors.base01;
+              # colors = {
+              #   background = colors.base00;
+              #   text_primary = colors.base05;
+              #   text_muted = colors.base04;
+              #   accent_primary = colors.base0E;
+              #   accent_secondary = colors.base0A;
+              #   warning = colors.base09;
+              #   error = colors.base08;
+              #   insert_hint = colors.base0D;
+              #   backdrop = colors.base00;
+              #   shadow = colors.base01;
 
-                border = {
-                  focused = colors.base0E;
-                  unfocused = colors.base02;
-                  scratchpad_focused = colors.base0A;
-                  scratchpad_unfocused = colors.base03;
-                  outer = colors.base00;
-                };
-              };
+              #   border = {
+              #     focused = colors.base0E;
+              #     unfocused = colors.base02;
+              #     scratchpad_focused = colors.base0A;
+              #     scratchpad_unfocused = colors.base03;
+              #     outer = colors.base00;
+              #   };
+              # };
             }
           ];
       };

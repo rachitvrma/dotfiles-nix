@@ -67,7 +67,7 @@
           core = {
             untrackedCache = true;
             fsmonitor = true;
-            editor = "nvim";
+            editor = "emacsclient -c -a emacs";
           };
           diff.algorithm = "histogram";
           user = {

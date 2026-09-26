@@ -123,7 +123,39 @@
   ;; Show shortcuts
   (dashboard-show-shortcuts t)
   :config
-  (add-hook 'server-after-make-frame-hook #'dashboard-open)
+  ;; `server-after-make-frame-hook' runs the instant emacsclient's new
+  ;; frame exists -- before the window manager has actually honored the
+  ;; `(fullscreen . maximized)' request from `default-frame-alist'
+  ;; (early-init.el), which lands a moment later, asynchronously.
+  ;; `dashboard-open' centers its content against whatever width the
+  ;; frame happens to have *right then*, so it centers against the
+  ;; pre-maximize size; pressing `g' (`dashboard-refresh-buffer', an
+  ;; alias of `dashboard-open') just redoes that same centering math
+  ;; after the frame has since caught up.
+  ;;
+  ;; This can't be a `:hook' entry: `:hook' only safely defers loading
+  ;; the package when the hooked function is one the package itself
+  ;; autoloads (like `dashboard-open' above it used to be) -- a custom
+  ;; function like this one isn't autoloaded from anywhere, so nothing
+  ;; would ever trigger `dashboard' to actually load, and this would
+  ;; silently never run. Registering it here in `:config' guarantees
+  ;; `dashboard' is already loaded first.
+  ;;
+  ;; A fixed delay would just be guessing how long the WM takes. Instead,
+  ;; open immediately so something shows up right away, then watch
+  ;; `window-size-change-functions' -- which fires when the frame's size
+  ;; *actually* changes -- for this specific frame's resize, recenter
+  ;; once when it happens, and remove the watcher so later manual
+  ;; resizes don't keep re-rendering it.
+  ;;
+  ;; NOTE: `watcher' must be bound with plain `let' (to nil) and then
+  ;; `setq'-assigned, not built as a `let*' init-form that refers to
+  ;; itself -- a lambda can only close over a binding that already
+  ;; exists in the surrounding scope at the time it's created, and
+  ;; `let*' doesn't introduce the `watcher' binding until *after* its
+  ;; init-form (the lambda itself) has been evaluated. Referencing
+  ;; `watcher' from inside that init-form is a `(void-variable watcher)'
+  ;; error waiting to happen the first time it's actually called.
   (dashboard-setup-startup-hook))
 
 (use-package page-break-lines
@@ -133,7 +165,9 @@
 (use-package doom-modeline
   :after nerd-icons
   :init (doom-modeline-mode 1)
-  :custom
+  :hook
+  (server-after-make-frame . doom-modeline-refresh-bars)
+  ;; :custom
   ;; doom-modeline--generate-clock caches the live clock SVG in a
   ;; single global variable (keyed by minute, not by frame), and by
   ;; default sizes it as (* doom-modeline-height 0.5
@@ -145,7 +179,8 @@
   ;; directly as the pixel radius instead, bypassing
   ;; doom-modeline-height (and this whole cache-consistency issue)
   ;; entirely, while keeping the live icon everywhere.
-  (doom-modeline-time-clock-size 9)
+  ;; (doom-modeline-time-clock-size 9)
+  ;; (doom-modeline-height 26)
   :config
   (display-time-mode 1)
   (display-battery-mode 1))
@@ -336,6 +371,7 @@
   :custom
   (eglot-autoshutdown t)
   (eglot-sync-connect nil)
+  (eglot-watch-files-outside-project-root nil) ; stop pyright from watching the Nix store
   :config
   (add-to-list 'eglot-server-programs
                '(nix-ts-mode . ("nixd" "--semantic-tokens=true" "--inlay-hints=false")))
@@ -568,6 +604,10 @@
      (consult-ripgrep "Search (ripgrep)" ?r)
      (project-find-dir "Find directory" ?D)
      (project-kill-buffers "Kill project buffers" ?k))))
+
+(use-package reader
+  :config
+  (reader-global-dark-mode 1))
 
 (use-package embark
   :bind

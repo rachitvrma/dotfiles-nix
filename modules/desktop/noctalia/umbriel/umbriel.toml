@@ -21,6 +21,8 @@
 
 [include]
 files = [] # Example: ["noctalia.toml", "outputs.toml"]
+[include.optional]
+files = ["noctalia.toml"]
 
 # ─────────────────────────────── General ────────────────────────────────────
 # Configure startup commands, session behavior, environment variables, and
