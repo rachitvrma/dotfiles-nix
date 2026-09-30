@@ -17,11 +17,9 @@
           "@wheel"
           "krish"
         ];
+        nix-path = [ "nixpkgs=${builtins.path { path = inputs.nixpkgs; }}" ];
       };
 
-      nixPath = [
-        "nixpkgs=${builtins.path { path = inputs.nixpkgs; }}"
-      ];
       registry = {
         nixpkgs.flake = inputs.nixpkgs;
         # wrappers.flake = inputs.wrappers;

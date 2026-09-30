@@ -16,27 +16,15 @@
 
 ;; Set once, globally, instead of ":ensure nil" on every use-package
 ;; block below: nothing should ever be installed by use-package itself.
-(setq use-package-always-ensure nil)
-
-;; use-package's own bookkeeping (:defer, :bind, etc.) is a no-op cost
-;; if statistics aren't being inspected; skip collecting it.
-(setq use-package-compute-statistics nil)
+(setq use-package-always-ensure nil
+      use-package-compute-statistics nil)
 
 (setq default-frame-alist
       (append '((menu-bar-lines . 0)
                 (tool-bar-lines . 0)
                 (vertical-scroll-bars . nil)
                 (horizontal-scroll-bars . nil)
-                (ns-transparent-titlebar . t)
-                ;; Pin the font here, before *any* frame exists --
-                ;; the daemon's own first frame and every later
-                ;; `emacsclient' frame all consult this same alist,
-                ;; so font metrics can no longer differ between them
-                ;; (which was one of the two causes behind
-                ;; doom-modeline looking different across frames --
-                ;; see the `doom-modeline-refresh-bars' fix below for
-                ;; the other one).
-                (font . "JetBrainsMono Nerd Font-13"))
+                (ns-transparent-titlebar . t))
               default-frame-alist))
 
 ;; The frame resizes itself in pixel steps as fonts/lines change,

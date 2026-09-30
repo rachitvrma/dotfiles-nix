@@ -1,0 +1,6 @@
+[output.HDMI-A-1]
+enabled = true
+
+[output.eDP-1]
+enabled = true
+scale = 1.0

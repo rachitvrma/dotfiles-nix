@@ -11,7 +11,7 @@
     console.keyMap = "mod-dh-ansi-us";
   };
 
-  flake.homeModules.keymap = {
+  flake.homeModules.keymap = { ... }: {
     home.keyboard = {
       layout = "us";
       options = [
@@ -30,6 +30,7 @@
         # Use Emacs keybindings in GTK Applications
         "org/gnome/desktop/interface" = {
           gtk-key-theme = "Emacs";
+          color-scheme = "prefer-dark";
         };
       };
     };

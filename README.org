@@ -1,3 +1,6 @@
+#+TITLE: My NixOS Configuration
+#+PROPERTY: header-args: :mkdirp yes
+#+auto_tangle: t
 #+begin_html
 <h1 align="center">
 <div align="center">
@@ -55,6 +58,7 @@ A single-host NixOS + home-manager configuration, wired together with [[https://
 * Repository layout
 
 #+begin_example
+
 .
 ├── flake.nix / flake.lock      # flake-parts entrypoint; auto-imports modules/
 ├── modules/
@@ -69,6 +73,7 @@ A single-host NixOS + home-manager configuration, wired together with [[https://
 │   ├── shell/                   # bash + starship
 │   └── users/                   # per-user home-manager entrypoints
 └── TODO.md
+
 #+end_example
 
 Every module follows the same shape: a top-level =flake.nixosModules.<name>= and/or =flake.homeModules.<name>= attribute, picked up automatically and wired into the =nixpavilion= host in [[./modules/nixos.nix][modules/nixos.nix]].
@@ -101,16 +106,20 @@ Assumes an installer ISO is already booted. See the [[https://nixos.org/manual/n
 Flakes and the =nix= command aren't on by default:
 
 #+begin_src sh
+
   sudo -i
   export NIX_CONFIG="experimental-features = nix-command flakes"
+
 #+end_src
 
 ** ↙️ Clone this repo
 
 #+begin_src sh
+
   mkdir -p /tmp
   cd /tmp
   git clone --depth=1 https://github.com/rachitvrma/dotfiles.git
+
 #+end_src
 
 ** 💾 Partition with Disko
@@ -118,18 +127,22 @@ Flakes and the =nix= command aren't on by default:
 Run the latest [[https://github.com/nix-community/disko][nix-community/disko]] rather than the nixpkgs-pinned version. Confirm =disko-config.nix= matches the target host (defaults to [[./modules/hosts/nixpavilion][nixpavilion]]):
 
 #+begin_src sh
+
   cd /tmp/dotfiles/modules/hosts/nixpavilion
   nix run github:nix-community/disko/latest -- --mode destroy,format,mount ./disko-config.nix
+
 #+end_src
 
 ** 🐧 Install
 
 #+begin_src sh
+
   mkdir -p /mnt/etc
   cp -r /tmp/dotfiles /mnt/etc/nixos
   nixos-install --no-root-passwd --root /mnt --cores 8 --max-jobs 1 --flake /mnt/etc/nixos#nixpavilion
   umount -R /mnt
   reboot
+
 #+end_src
 
 ** 💻 Post-install
@@ -137,18 +150,24 @@ Run the latest [[https://github.com/nix-community/disko][nix-community/disko]] r
 *** Set your password
 
 #+begin_src sh
+
   passwd $USER
+
 #+end_src
 
 *** Edit config without =sudo=
 
 Move =/etc/nixos= into your home directory so you can edit and rebuild without root ([[https://wiki.nixos.org/wiki/NixOS_configuration_editors#Editing_as_normal_user][source]]):
 
-#+begin_src sh
+#+begin_src sh :tangle ./scripts/00-move_nixos-config.sh :mkdirp yes
+
+  #!/usr/bin/env bash
+
   mkdir ~/etc
   sudo mv /etc/nixos ~/etc/
   sudo chown -R $(id -un):users ~/etc/nixos
   sudo ln -s ~/etc/nixos /etc/
+
 #+end_src
 
 *** GPG / pass restoration
@@ -160,7 +179,9 @@ Move =/etc/nixos= into your home directory so you can edit and rebuild without r
 Before wiping the old system:
 
 #+begin_src sh
+
   gpg --export-secret-keys --armor > gpg-backup.asc
+
 #+end_src
 
 Also make sure =~/.password-store= is backed up or pushed to a remote --- the key alone decrypts nothing without the encrypted store itself.
@@ -168,9 +189,11 @@ Also make sure =~/.password-store= is backed up or pushed to a remote --- the ke
 After reinstall, before rebuilding:
 
 #+begin_src sh
+
   gpg --import gpg-backup.asc
   gpg --edit-key <keyid> trust   # choose 5 (ultimate)
   git clone <your-pass-store-remote> ~/.password-store
+
 #+end_src
 
 * Nix / NixOS / Flakes --- learning resources

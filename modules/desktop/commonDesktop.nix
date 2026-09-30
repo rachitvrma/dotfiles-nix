@@ -5,6 +5,19 @@ let
       url = "https://raw.githubusercontent.com/rachitvrma/rachitvrma/main/.github/assets/shinchan.png";
       hash = "sha256-CP9uGyslZ19wCaglMb1UG+NmcU/GxN5HDXSdrO5jAlw=";
     };
+  commonDesktopEnvVars = {
+    SDL_VIDEODRIVER = "wayland";
+    QT_QPA_PLATFORM = "wayland";
+    GDK_BACKEND = "wayland,x11";
+    CLUTTER_BACKEND = "wayland";
+    MOZ_ENABLE_WAYLAND = 1;
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+    NIXOS_OZONE_WL = 1;
+    WLR_NO_HARDWARE_CURSORS = 1;
+    WLR_RENDERER = "vulkan";
+    LIBVA_DRIVER_NAME = "iHD";
+    GTK_USE_PORTAL = 1;
+  };
 in
 {
   flake = {
@@ -32,25 +45,17 @@ in
         };
       };
       # Essential variables for wayland set up
-      environment.sessionVariables = {
-        SDL_VIDEODRIVER = "wayland";
-        QT_QPA_PLATFORM = "wayland";
-        GDK_BACKEND = "wayland,x11";
-        CLUTTER_BACKEND = "wayland";
-        MOZ_ENABLE_WAYLAND = 1;
-        ELECTRON_OZONE_PLATFORM_HINT = "auto";
-        NIXOS_OZONE_WL = 1;
-        WLR_NO_HARDWARE_CURSORS = 1;
-        WLR_RENDERER = "vulkan";
-        LIBVA_DRIVER_NAME = "iHD";
-      };
+      environment.sessionVariables = commonDesktopEnvVars;
     };
 
-    homeModules.commonDesktop = { pkgs, ... }: {
+    homeModules.commonDesktop = { pkgs, lib, ... }: {
       xdg.portal.enable = true;
 
       home.file.".face".source = shinchan pkgs;
-
+      home.sessionVariables = lib.mkMerge [
+        commonDesktopEnvVars
+      ];
+      systemd.user.sessionVariables.GDK_BACKEND = "wayland";
       services = {
         playerctld.enable = true;
         udiskie = {

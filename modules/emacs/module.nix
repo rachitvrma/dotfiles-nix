@@ -3,6 +3,7 @@
     {
       pkgs,
       config,
+      lib,
       ...
     }:
     let
@@ -30,6 +31,10 @@
       );
 
       home = {
+        sessionVariables = {
+          EDITOR = lib.mkForce "emacsclient -ca \"\"";
+          VISUAL = lib.mkForce "emacsclient -ca \"\"";
+        };
         packages = with pkgs; [
           nixd
           nixfmt
@@ -38,6 +43,8 @@
           gnumake # For the make command
 
           tree-sitter # For cli installation of grammars
+
+          systemd-lsp # for system stuff
 
           # Bash stack
           bash-language-server
@@ -73,8 +80,6 @@
           (aspellWithDicts (
             dicts: with dicts; [
               en
-              en-computers
-              en-science
             ]
           ))
 
@@ -130,7 +135,7 @@
               ement # Matrix client within emacs
               emms
               exec-path-from-shell
-              # ghostel # Terminal within Emacs
+              forge # Github integration
               helpful # A better *help* buffer
               hl-todo # Highlight tags like TODO, etc.
               indent-bars
@@ -141,6 +146,7 @@
               marginalia
               multiple-cursors
               neotree # Side view stuff
+
               nerd-icons
               nerd-icons-completion
               nerd-icons-corfu
@@ -148,17 +154,21 @@
               nerd-icons-grep
               nerd-icons-ibuffer
               nerd-icons-xref
+
               nix-ts-mode
               no-littering
               orderless
               org-auto-tangle
               page-break-lines
               password-store # An interface within emacs to interact with the GNU pass-cli
+              pinentry # For pinentry
               pomo-cat # A cute kitty pomodoro timer
               posframe # NOTE IDK what it does... Just a dependency
               pulsar # make it shine when you change point
               pyvenv # For working with python virtual environments
               rainbow-delimiters
+              systemd # For systemd mode
+              tramp # for TRAMP connection over ssh
               undo-fu # Part of undo-tree stack
               undo-fu-session # Part of undo-tree stack
               use-package
@@ -226,8 +236,5 @@
         };
         startWithUserSession = "graphical";
       };
-
-      systemd.user.sessionVariables.GDK_BACKEND = "wayland";
-      home.sessionVariables.GDK_BACKEND = "wayland";
     };
 }

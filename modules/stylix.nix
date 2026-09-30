@@ -3,15 +3,8 @@ let
   commonStylix = pkgs: config: lib: {
     stylix = {
       enable = true;
-      # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
       base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
       image = inputs.wallpapers + "/wallhaven-0w9zk6.jpg";
-
-      /*
-            override = {
-              base00 = "141617";
-            };
-      */
 
       polarity = "dark";
 
@@ -55,14 +48,14 @@ let
           name = "Noto Color Emoji";
         };
       };
-      /*
-            opacity = rec {
-              desktop = 0.92;
-              terminal = desktop;
-              popups = desktop;
-              applications = desktop;
-            };
-      */
+
+      opacity = {
+        desktop = 0.9;
+        terminal = 0.9;
+        popups = 0.9;
+        applications = 0.95;
+      };
+
     };
   };
 in
@@ -118,6 +111,63 @@ in
         enable = true;
         kvantum.enable = true;
       };
+
+      gtk = {
+        enable = true;
+        gtk2 = {
+          enable = true;
+          extraConfig = ''
+            gtk-key-theme-name = "Emacs"
+          '';
+        };
+        gtk3 = {
+          enable = true;
+          colorScheme = "dark";
+          bookmarks =
+            let
+              home = config.home.homeDirectory;
+            in
+            [
+              "file://${home}/Documents"
+              "file://${home}/Downloads"
+              "file://${home}/Documents/Books"
+            ];
+
+          extraConfig = {
+            gtk-toolbar-style = "GTK_TOOLBAR_ICONS";
+            gtk-toolbar-icon-size = "GTK_ICON_SIZE_LARGE_TOOLBAR";
+            gtk-button-images = 0;
+            gtk-menu-images = 0;
+            gtk-enable-event-sounds = 1;
+            gtk-enable-input-feedback-sounds = 0;
+            gtk-xft-antialias = 1;
+            gtk-xft-hinting = 1;
+            gtk-xft-hintstyle = "hintslight";
+            gtk-xft-rgba = "rgb";
+            gtk-application-prefer-dark-theme = 1; # TODO: Stylix doesn't do it.
+          };
+        };
+        gtk4 = {
+          enable = true;
+          colorScheme = "dark";
+        };
+      };
+      services.xsettingsd = {
+        enable = true;
+        # TODO: PR to include xsettings into stylix
+        settings = {
+          "Net/ThemeName" = "adw-gtk3";
+          "Net/IconThemeName" = "Papirus-Dark";
+          "Gtk/CursorThemeName" = "phinger-cursors-light";
+          "Net/EnableEventSounds" = true;
+          "EnableInputFeedbackSounds" = false;
+          "Xft/Antialias" = true;
+          "Xft/Hinting" = true;
+          "Xft/HintStyle" = "hintslight";
+          "Xft/RGBA" = "rgb";
+        };
+      };
+      stylix.targets.qt.standardDialogs = "xdgdesktopportal";
     }
     // (commonStylix pkgs config lib);
 }

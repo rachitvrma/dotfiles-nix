@@ -1,0 +1,4 @@
+[hot_corners.bottom_left]
+action = "overview-toggle"
+delay_ms = 500
+enabled = false

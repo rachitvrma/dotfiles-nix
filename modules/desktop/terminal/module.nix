@@ -3,12 +3,14 @@ let
     xdg.terminal-exec = {
       enable = true;
       settings = {
-        default = [ "kitty.desktop" ];
+        default = [ "footclient.desktop" ];
       };
     };
   };
 in
 {
-  flake.nixosModules.xdg-terminal = commonSetup;
-  flake.homeModules.xdg-terminal = commonSetup;
+  flake = {
+    nixosModules.xdg-terminal = commonSetup;
+    homeModules.xdg-terminal = commonSetup;
+  };
 }

@@ -8,6 +8,7 @@
 
 ;; Does what it says
 (setq use-package-verbose t
+      package-vc-allow-build-commands nil ;; Use nix to package stuff
       debug-on-error t)
 
 (use-package emacs
@@ -15,6 +16,11 @@
   ;; "y or n" instead of typing out "yes"/"no" at every prompt.
   (setq use-short-answers t)
   (setq ring-bell-function 'ignore)
+  ;; credit: Lukas Barth at https://www.lukas-barth.net/blog/emacs-wsl-copy-clipboard/
+  (setopt select-active-regions nil)
+  (setopt select-enable-clipboard 't)
+  (setopt select-enable-primary nil)
+  (setopt interprogram-cut-function #'gui-select-text)
 
   :hook
   ;; Display line numbers in programming modes only
@@ -107,83 +113,110 @@
 (use-package org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode))
 
+;; (use-package dashboard
+;;   :custom
+;;   (dashboard-startup-banner 'logo)
+;;   (initial-buffer-choice #'dashboard-open)
+;;   (dashboard-center-content t)
+;;   (dashboard-vertically-center-content t)
+;;   (dashboard-navigation-cycle t)
+
+;;   ;; Nerd icons
+;;   (dashboard-display-icons-p t)
+;;   (dashboard-icon-type 'nerd-icons)
+;;   (dashboard-set-heading-icons t)
+;;   (dashboard-set-file-icons t)
+;;   ;; Show shortcuts
+;;   (dashboard-show-shortcuts t)
+;;   :config
+;;   ;; `server-after-make-frame-hook' runs the instant emacsclient's new
+;;   ;; frame exists -- before the window manager has actually honored the
+;;   ;; `(fullscreen . maximized)' request from `default-frame-alist'
+;;   ;; (early-init.el), which lands a moment later, asynchronously.
+;;   ;; `dashboard-open' centers its content against whatever width the
+;;   ;; frame happens to have *right then*, so it centers against the
+;;   ;; pre-maximize size; pressing `g' (`dashboard-refresh-buffer', an
+;;   ;; alias of `dashboard-open') just redoes that same centering math
+;;   ;; after the frame has since caught up.
+;;   ;;
+;;   ;; This can't be a `:hook' entry: `:hook' only safely defers loading
+;;   ;; the package when the hooked function is one the package itself
+;;   ;; autoloads (like `dashboard-open' above it used to be) -- a custom
+;;   ;; function like this one isn't autoloaded from anywhere, so nothing
+;;   ;; would ever trigger `dashboard' to actually load, and this would
+;;   ;; silently never run. Registering it here in `:config' guarantees
+;;   ;; `dashboard' is already loaded first.
+;;   ;;
+;;   ;; A fixed delay would just be guessing how long the WM takes. Instead,
+;;   ;; open immediately so something shows up right away, then watch
+;;   ;; `window-size-change-functions' -- which fires when the frame's size
+;;   ;; *actually* changes -- for this specific frame's resize, recenter
+;;   ;; once when it happens, and remove the watcher so later manual
+;;   ;; resizes don't keep re-rendering it.
+;;   ;;
+;;   ;; NOTE: `watcher' must be bound with plain `let' (to nil) and then
+;;   ;; `setq'-assigned, not built as a `let*' init-form that refers to
+;;   ;; itself -- a lambda can only close over a binding that already
+;;   ;; exists in the surrounding scope at the time it's created, and
+;;   ;; `let*' doesn't introduce the `watcher' binding until *after* its
+;;   ;; init-form (the lambda itself) has been evaluated. Referencing
+;;   ;; `watcher' from inside that init-form is a `(void-variable watcher)'
+;;   ;; error waiting to happen the first time it's actually called.
+;;   (dashboard-setup-startup-hook))
+
 (use-package dashboard
   :custom
   (dashboard-startup-banner 'logo)
-  (initial-buffer-choice #'dashboard-open)
   (dashboard-center-content t)
   (dashboard-vertically-center-content t)
   (dashboard-navigation-cycle t)
-
-  ;; Nerd icons
   (dashboard-display-icons-p t)
   (dashboard-icon-type 'nerd-icons)
   (dashboard-set-heading-icons t)
   (dashboard-set-file-icons t)
-  ;; Show shortcuts
   (dashboard-show-shortcuts t)
+  ;; Removed: (initial-buffer-choice #'dashboard-open)
   :config
-  ;; `server-after-make-frame-hook' runs the instant emacsclient's new
-  ;; frame exists -- before the window manager has actually honored the
-  ;; `(fullscreen . maximized)' request from `default-frame-alist'
-  ;; (early-init.el), which lands a moment later, asynchronously.
-  ;; `dashboard-open' centers its content against whatever width the
-  ;; frame happens to have *right then*, so it centers against the
-  ;; pre-maximize size; pressing `g' (`dashboard-refresh-buffer', an
-  ;; alias of `dashboard-open') just redoes that same centering math
-  ;; after the frame has since caught up.
-  ;;
-  ;; This can't be a `:hook' entry: `:hook' only safely defers loading
-  ;; the package when the hooked function is one the package itself
-  ;; autoloads (like `dashboard-open' above it used to be) -- a custom
-  ;; function like this one isn't autoloaded from anywhere, so nothing
-  ;; would ever trigger `dashboard' to actually load, and this would
-  ;; silently never run. Registering it here in `:config' guarantees
-  ;; `dashboard' is already loaded first.
-  ;;
-  ;; A fixed delay would just be guessing how long the WM takes. Instead,
-  ;; open immediately so something shows up right away, then watch
-  ;; `window-size-change-functions' -- which fires when the frame's size
-  ;; *actually* changes -- for this specific frame's resize, recenter
-  ;; once when it happens, and remove the watcher so later manual
-  ;; resizes don't keep re-rendering it.
-  ;;
-  ;; NOTE: `watcher' must be bound with plain `let' (to nil) and then
-  ;; `setq'-assigned, not built as a `let*' init-form that refers to
-  ;; itself -- a lambda can only close over a binding that already
-  ;; exists in the surrounding scope at the time it's created, and
-  ;; `let*' doesn't introduce the `watcher' binding until *after* its
-  ;; init-form (the lambda itself) has been evaluated. Referencing
-  ;; `watcher' from inside that init-form is a `(void-variable watcher)'
-  ;; error waiting to happen the first time it's actually called.
-  (dashboard-setup-startup-hook))
+  (dashboard-setup-startup-hook)
+
+  (if (daemonp)
+    (add-hook 'server-after-make-frame-hook
+              (lambda ()
+                (let ((frame (selected-frame)))
+                  ;; Wait 0.1s for Wayland to assign final geometry
+                  (run-at-time "0.1 sec" nil
+                               (lambda ()
+                                 (with-selected-frame frame
+                                   ;; This single call handles the rendering and centering
+                                   (dashboard-open)))))))))
 
 (use-package page-break-lines
   :init
   (page-break-lines-mode))
 
 (use-package doom-modeline
-  :after nerd-icons
-  :init (doom-modeline-mode 1)
-  :hook
-  (server-after-make-frame . doom-modeline-refresh-bars)
-  ;; :custom
-  ;; doom-modeline--generate-clock caches the live clock SVG in a
-  ;; single global variable (keyed by minute, not by frame), and by
-  ;; default sizes it as (* doom-modeline-height 0.5
-  ;; doom-modeline-time-clock-size). Under emacsclient/services.emacs
-  ;; that comes out wrong -- whichever frame's doom-modeline-height
-  ;; happens to be in effect when the per-minute cache regenerates
-  ;; sets the size for every frame until the next minute. Per the
-  ;; source, an *integer* doom-modeline-time-clock-size is used
-  ;; directly as the pixel radius instead, bypassing
-  ;; doom-modeline-height (and this whole cache-consistency issue)
-  ;; entirely, while keeping the live icon everywhere.
-  ;; (doom-modeline-time-clock-size 9)
-  ;; (doom-modeline-height 26)
-  :config
+  ;; Strictly prevent loading during daemon boot
+  :defer t
+  :init
+  ;; Built-in modes don't need the GUI, safe to start immediately
   (display-time-mode 1)
-  (display-battery-mode 1))
+  (display-battery-mode 1)
+
+  (defun my/doom-modeline-setup-frame ()
+    "Load and enable doom-modeline using real Wayland font metrics."
+    (let ((frame (selected-frame)))
+      (run-at-time "0.1 sec" nil
+                   (lambda ()
+                     (with-selected-frame frame
+                       ;; Load the package here so its defaults initialize against the GUI
+                       (require 'doom-modeline)
+                       (doom-modeline-mode 1)
+                       (doom-modeline-refresh-bars))))))
+
+  (if (daemonp)
+      (add-hook 'server-after-make-frame-hook #'my/doom-modeline-setup-frame)
+    (require 'doom-modeline)
+    (doom-modeline-mode 1)))
 
 (use-package nerd-icons)
 
@@ -333,6 +366,10 @@
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
   )
 
+(use-package tramp
+  :ensure nil
+  :demand t)
+
 (use-package corfu
   :custom
   (corfu-auto t)
@@ -358,6 +395,7 @@
           tex-mode
           LaTeX-mode
           toml-ts-mode
+          systemd-mode
           scheme-mode) . eglot-ensure)
   :bind (:map eglot-mode-map
               ("C-c l a" . eglot-code-actions)
@@ -376,7 +414,9 @@
   (add-to-list 'eglot-server-programs
                '(nix-ts-mode . ("nixd" "--semantic-tokens=true" "--inlay-hints=false")))
   (add-to-list 'eglot-server-programs
-               '(scheme-mode . ("guile-lsp-server"))))
+               '(toml-ts-mode . ("tombi" "lsp")))
+  (add-to-list 'eglot-server-programs
+               '(systemd-mode . ("systemd-lsp"))))
 
 (use-package apheleia
   :init
@@ -421,6 +461,9 @@
 (use-package majutsu
   :after magit
   :bind ("C-x j" . majutsu))
+
+(use-package forge
+  :after magit)
 
 (use-package emms
   :commands (emms emms-play-directory-tree)
@@ -578,9 +621,7 @@
   :ensure nil
   :custom
   (ispell-program-name "aspell")
-  (ispell-dictionary "en")
-  (ispell-extra-args '("--add-extra-dicts=en-computers.rws"
-                       "--add-extra-dicts=en_US-science.rws")))
+  (ispell-dictionary "en"))
 
 ;; Enable flyspell for markdown and org buffers
 (use-package flyspell
@@ -749,6 +790,9 @@
 (use-package org
   :ensure nil
   :commands (org-capture org-agenda)
+  :init
+  (unless (file-directory-p (expand-file-name "~/org"))
+    (make-directory (expand-file-name "~/org") t))
   :bind
   (("C-c a" . org-agenda)
    ("C-c c" . org-capture))
@@ -777,7 +821,9 @@
 
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
-  (add-to-list 'org-structure-template-alist '("nix" . "src nix")))
+  (add-to-list 'org-structure-template-alist '("nix" . "src nix"))
+  (add-to-list 'org-structure-template-alist '("bash" . "src bash"))
+  )
 
 (use-package helpful
   :bind(
@@ -821,7 +867,23 @@
 
 (use-package direnv
   :config
-  (direnv-mode))
+  (if (executable-find "direnv")
+      (direnv-mode)
+    (message "direnv: executable not found, skipping direnv-mode")))
+
+(use-package pinentry
+  :custom
+  (epg-pinentry-mode 'loopback)
+  (epa-pinentry-mode 'loopback)
+  :config
+  (pinentry-start))
+
+;; There's no package called epa-file, it's a custom thing
+(use-package epa-file
+  :ensure nil ; built-in
+  :defer t
+  :custom
+  (epa-pinentry-mode 'loopback))
 
 (use-package doom-themes
   :custom
@@ -907,6 +969,9 @@
 (use-package cdlatex
   :after tex
   :hook (LaTeX-mode . turn-on-cdlatex))
+
+(use-package systemd
+  :defer t)
 
 (provide 'init)
 ;;; init.el ends here

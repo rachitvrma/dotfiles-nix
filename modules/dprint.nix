@@ -1,3 +1,4 @@
+# TODO: Needs an activation script so that plugins are updated everytime they run
 {
   flake.homeModules.dprint = { pkgs, ... }: {
     programs.dprint = {

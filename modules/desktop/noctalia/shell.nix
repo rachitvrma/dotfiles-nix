@@ -25,7 +25,16 @@
       programs.noctalia = {
         enable = true;
         systemd.enable = true;
-        settings = lib.importTOML ./noctalia-config.toml;
+        settings = lib.mkMerge [
+          (lib.importTOML ./noctalia-config.toml)
+          {
+            # Disable templates coz we gonna use stylix
+            theme.templates = {
+              enable_builtin_templates = false;
+              enable_community_templates = false;
+            };
+          }
+        ];
       };
     };
 }

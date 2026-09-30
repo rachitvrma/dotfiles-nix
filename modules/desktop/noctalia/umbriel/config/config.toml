@@ -1,0 +1,24 @@
+# [include.optional]
+# files = ["noctalia.toml"]
+
+# Included using home-manager
+# [include]
+# files = [
+#   "appearance.toml",
+#   "general.toml",
+#   "hot_corners.toml",
+#   "input.toml",
+#   "keybinds.toml",
+#   "layer-rules.toml",
+#   "layout.toml",
+#   "outputs.toml",
+#   "window-rules.toml",
+# ]
+
+[overview]
+zoom = 0.5
+
+
+[workspaces]
+back_and_forth = true
+empty_above = true

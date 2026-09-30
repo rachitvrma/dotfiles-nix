@@ -8,11 +8,7 @@
   inputs = {
     agenix = {
       url = "github:ryantm/agenix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        # Avoids downloading darwin stuff
-        darwin.follows = "";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     disko.url = "github:nix-community/disko";
@@ -46,7 +42,7 @@
 
     # Download the wallpaper repo and then use it, otherwise it will fail
     wallpapers = {
-      url = "git+file:///home/krish/Pictures/Wallpapers";
+      url = "github:rachitvrma/Wallpapers";
       flake = false;
     };
   };

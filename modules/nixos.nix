@@ -34,6 +34,7 @@ in
     nixpkgs.overlays = [
       # Add in the NUR overlays.
       inputs.nur.overlays.default
+      # self.overlays.default # Import the overlays that I design
     ];
   };
 }

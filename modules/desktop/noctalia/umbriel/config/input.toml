@@ -1,0 +1,35 @@
+[input]
+middle_click_paste = false
+
+[input.cursor]
+follows_focus = true
+hardware_cursor = true
+hide_timeout_ms = 0
+hide_when_typing = true
+size = 32
+theme = "phinger-cursors-light"
+
+[input.focus]
+follows_mouse = true
+
+[input.keyboard]
+layout = "us"
+numlock_toggle = true
+options = "ctrl:swapcaps"
+repeat_delay = 600
+repeat_rate = 25
+track_layout = "global"
+variant = "colemak_dh"
+
+[input.mouse]
+scroll_wheel_step = 60
+sensitivity = 0.0
+
+[input.tablet]
+enabled = true
+
+[input.touchpad]
+disable_while_typing = true
+natural_scroll = true
+tap = true
+accel_profile = "adaptive"

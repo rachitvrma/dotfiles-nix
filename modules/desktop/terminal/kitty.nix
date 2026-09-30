@@ -1,41 +1,8 @@
 {
-  flake.homeModules.kitty-desktopIntegration =
-    {
-      lib,
-      config,
-      pkgs,
-      ...
-    }:
-    let
-      cfg = config.programs.kitty.enableDesktopIntegration;
-    in
-    {
-      options.programs.kitty.enableDesktopIntegration = lib.mkEnableOption "enable kitty's portal implementation";
-      config = lib.mkIf cfg {
-        xdg.dataFile."xdg-desktop-portal/portals/kitty.portal".text = ''
-          [portal]
-          DBusName=org.freedesktop.impl.portal.desktop.kitty
-          Interfaces=org.freedesktop.impl.portal.Settings;org.freedesktop.impl.portal.FileChooser;
-        '';
-
-        xdg.dataFile."dbus-1/services/org.freedesktop.impl.portal.desktop.kitty.service".text = ''
-          [D-BUS Service]
-          Name=org.freedesktop.impl.portal.desktop.kitty
-          Exec=${pkgs.kitty}/bin/kitten desktop-ui run-server
-        '';
-
-        xdg.portal.config = {
-          umbriel = {
-            "org.freedesktop.impl.portal.Settings" = "kitty;*";
-            "org.freedesktop.impl.portal.FileChooser" = "kitty;*";
-          };
-        };
-      };
-    };
   flake.homeModules.kitty = {
     programs.kitty = {
-      enable = true;
-      enableDesktopIntegration = true;
+      enable = false;
+      # enableDesktopIntegration = true; # WARNING: This thing kept me awake at night coz it messed with GTK theming
       actionAliases = {
         launch_tab = "launch --cwd=current --type=tab";
         launch_window = "launch --cwd=current --type=os-window";
@@ -57,7 +24,7 @@
 
         allow_remote_control = true;
 
-        custom_shaders = "inside-the-matrix";
+        custom_shaders = "cursor-trail-lightning";
 
         notify_on_cmd_finish = "unfocused";
 

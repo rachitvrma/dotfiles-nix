@@ -251,11 +251,6 @@ auto_sync = true
 transparency_mode = "glass"
 polkit_placement = "attached"
 
-[theme]
-custom_palette = "stylix"
-mode = "dark"
-source = "custom"
-
 [wallpaper]
 directory = "/home/krish/Pictures/Wallpapers"
 transition_on_startup = true
