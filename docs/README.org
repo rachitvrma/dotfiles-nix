@@ -1,0 +1,103 @@
+#+TITLE: My NixOS Configuration
+#+begin_html
+<h1 align="center">
+<div align="center">
+<img src="./.github/images/nixos.svg" width="100px"/>
+</div>
+<br>
+<p>Rachit's NixOS configuration</p>
+<img src="https://capsule-render.vercel.app/api?type=waving&height=300&color=0:d3869b,100:89b482&text=Rachit's%20dotfiles&fontColor=202020&fontAlign=50&fontAlignY=38&fontSize=48&animation=fadeIn&desc=NixOS%20%C2%B7%20Home-Manager%20%C2%B7%20flake-parts&descAlign=50&descAlignY=62&descSize=18&descColor=202020" />
+<div align="center">
+<p></p>
+<div align="center">
+<a href="https://www.gnu.org/software/emacs/">
+<img src="https://img.shields.io/badge/emacs-31-purple?style=for-the-badge&logo=gnuemacs&logoColor=e5d0ff&label=emacs&labelColor=202020&color=7F5AB6">
+</a>
+<a href="https://nixos.org">
+<img src="https://img.shields.io/badge/NixOS-unstable-blue.svg?style=for-the-badge&labelColor=202020&logo=NixOS&logoColor=89b482&color=89b482">
+</a>
+<a href="https://github.com/rachitvrma/dotfiles/blob/main/LICENSE">
+<img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=GPLv3&colorA=202020&colorB=d3869b&logo=unlicense&logoColor=fbf1c7&%22"/>
+</a>
+</div>
+<br>
+</div>
+</h1>
+#+end_html
+
+* Introduction
+
+#+begin_quote
+Looks matter. It is a good thing to have utility with a good rice.
+#+end_quote
+
+A single-host NixOS + home-manager configuration, wired together with [[https://flake.parts][flake-parts]] instead of one monolithic =flake.nix=. Every file under [[./modules][modules/]] auto-imports itself via =lib.fileset= --- see [[./flake.nix][flake.nix]] --- so adding a new module is just adding a new =.nix= file, no import list to maintain. Details in [[./docs/architecture.org][docs/architecture.org]].
+
+| Util                     | Program used                                                                               |
+|--------------------------+--------------------------------------------------------------------------------------------|
+| Shell                    | Bash · starship · carapace · zoxide · fzf / television                                     |
+| Desktop Environment      | umbriel (compositor) · Noctalia (bar, dock, launcher, lock screen, greeter)                |
+| Editor                   | Emacs (pgtk, daemon + =emacsclient=)                                                       |
+| Terminal                 | foot (via =footclient=) · kitty module present but disabled                                |
+| Launchers                | Noctalia launcher · =wlr-which-key= menus · =xdg-launcher= inside Emacs                    |
+| Audio                    | PipeWire · wiremix · cava                                                                  |
+| System Monitor           | bottom · htop · gdu                                                                        |
+| Mail                     | Gmail account declared in [[./modules/accounts][accounts]] (credentials via =pass=); no mail client wired up yet   |
+| Chat                     | Vesktop (Discord) · Emacs ERC / rcirc (IRC, via soju) · Emacs ement.el (Matrix)            |
+| File Manager             | Emacs Dired · PCManFM (GUI fallback)                                                       |
+| RSS Reader               | Newsticker (Emacs)                                                                         |
+| Documents                | zathura · emacs-reader · LibreOffice · pandoc · LaTeX / Typst                              |
+| Media                    | mpv (uosc, SponsorBlock) · EMMS · swayimg                                                  |
+| Downloads                | aria2 (RPC + systemd) · yt-dlp (=yt-music=, =yt-playlist= helpers)                         |
+| Theme                    | Stylix --- One Dark (base16), Papirus-Dark icons, phinger cursors, JetBrainsMono Nerd Font |
+| Browser                  | Firefox (hardened) · qutebrowser · w3m                                                     |
+| Secrets                  | agenix · pass / GPG                                                                        |
+| Version Control          | Git + Jujutsu (GPG-signed) · gh / gh-dash · Magit + majutsu                                |
+| Network                  | NetworkManager (iwd backend) · impala · bluetui · LocalSend                                |
+| Virtualisation           | libvirt / QEMU · virt-manager                                                              |
+| Agenda / Task Maintainer | Emacs + org-mode                                                                           |
+
+-----
+
+* Quick start
+
+Fresh machine: follow [[./docs/installation.org][docs/installation.org]]. Already installed:
+
+#+begin_src sh
+
+  cd ~/etc/nixos
+  nix flake update
+  nos            # alias for: nh os switch
+
+#+end_src
+
+The repo is expected to live at =~/etc/nixos= (see [[./docs/architecture.org][architecture]] for why).
+
+* Documentation
+
+All longer-form documentation lives in [[./docs][docs/]] (index: [[./docs/README.org][docs/README.org]]).
+
+| Page               | What it covers                                                      |
+|--------------------+---------------------------------------------------------------------|
+| [[./docs/installation.org][installation]]       | Install from an ISO, restore GPG / pass / agenix keys, Nix tokens   |
+| [[./docs/architecture.org][architecture]]       | Layout, module auto-import, adding a module, adapting to a new user |
+| [[./docs/usage.org][usage]]              | Aliases, helper commands, updating                                  |
+| [[./docs/keybindings.org][keybindings]]        | Compositor, which-key, Emacs, qutebrowser, zathura                  |
+| [[./docs/theming.org][theming]]            | How Stylix feeds everything, and what is hand-themed                |
+| [[./docs/secrets.org][secrets]]            | agenix, pass / GPG, keyring, backups                                |
+| [[./docs/tool-inventory.org][tool-inventory]]     | One row per job; overlapping tools flagged                          |
+| [[./docs/troubleshooting.org][troubleshooting]]    | Known gotchas and fixes                                             |
+| [[./docs/new-host.org][new-host]]           | Adding a second machine                                             |
+| [[./docs/learning-resources.org][learning-resources]] | Nix / NixOS / flakes reading list                                   |
+
+Near the code: [[./modules/emacs/README.org][why Emacs]], [[./modules/emacs/config/Config.org][literate Emacs config]], [[./modules/browsers/README.md][Firefox userChrome notes]], and [[./TODO.org][TODO.org]].
+
+** TODO Screenshots
+
+Add a few screenshots (desktop, Emacs dashboard, Noctalia bar) under =.github/images/= and show them near the top of this file.
+
+-----
+
+* 📃 License
+
+Licensed under the GNU General Public License v3.0. See [[./LICENSE][LICENSE]] for details.

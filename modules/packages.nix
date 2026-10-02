@@ -64,12 +64,6 @@
 
       swayimg.enable = true;
 
-      pomo = {
-        enable = true;
-        settings = {
-          onSessionEnd = "start";
-        };
-      };
       gcc.enable = true;
       # TODO: Make a module for $XDG_CONFIG_HOME/cava/themes
       # NOTE: For cava enabled the stylix.cava.rainbow.enable
@@ -103,6 +97,7 @@
       unzip # For the unzip command
       file # For the file command
       pinta # For editing images
+      timr-tui # TODO make a module for it
     ];
   };
 }

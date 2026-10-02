@@ -44,6 +44,11 @@
           completion.height = "30%";
         };
 
+        aliases = {
+          # Scripts in the the nix-store hash's /usr/share/qutebrowser/userscripts are also picked up, so no need to link them.
+          mpv = "spawn -u view_in_mpv";
+        };
+
         # Restores the "clean slate for normal mode only" intent -
         # hint/insert/command/prompt/caret keep their built-in
         # defaults except where explicitly overridden below.

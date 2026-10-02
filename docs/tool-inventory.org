@@ -1,0 +1,97 @@
+#+TITLE: Tool inventory
+
+Back to the [[../README.org][README]].
+
+One row per job, so overlapping tools are a conscious choice. The *Status* column is a proposal from a repository audit, not a decision: change it as you decide.
+
+Legend: *Keep* (primary tool), *Keep (niche)* (deliberate secondary), *Review* (overlaps with something else).
+
+* Timers and clocks
+
+Proposal: one terminal tool, =timr-tui=, covers pomodoro, countdown, timer (count-up), event and local-time clock modes in a single binary. It replaces the two separate TUIs and the Emacs timer.
+
+| Tool                     | Where                | Status                                     | Note                                                                                         |
+|--------------------------+----------------------+--------------------------------------------+----------------------------------------------------------------------------------------------|
+| timr-tui                 | to be added          | Keep                                       | Pomodoro, countdown, timer, clock in one TUI. Replaces =pomo= and clock-rs                   |
+| =pomo= TUI               | [[../modules/packages.nix][packages.nix]]         | Replace                                    | Pomodoro only. Its =onSessionEnd = "start"= maps to timr's optional work / pause auto-switch |
+| clock-rs                 | [[../modules/shell/module.nix][shell/module.nix]]     | Replace                                    | Clock plus timer and stopwatch; timr covers both                                             |
+| pomo-cat                 | [[../modules/emacs/config/Config.org][Config.org]]           | Replace                                    | Same job again, and it does not tie into org tasks                                           |
+| Noctalia pomodoro plugin | [[../modules/desktop/noctalia/noctalia-config.toml][noctalia-config.toml]] | Keep only if you want the timer in the bar | Glanceable, auto-starts breaks, plays an alarm. timr only shows while its terminal is open   |
+| Noctalia timer plugin    | same                 | Replace                                    | Second bar timer next to the pomodoro plugin; timr covers it                                 |
+
+Things to verify before removing the Noctalia plugins:
+
+- [ ] timr's alarm sound: its docs describe sound as a build feature, so check whether the nixpkgs build has it.
+- [ ] Desktop notifications when a session ends (the Noctalia plugin gives you these for free).
+- [ ] Whether you want the timer visible while the terminal is closed. If yes, keep the pomodoro plugin and nothing else.
+
+* Chat
+
+| Tool     | Status | Note                                       |
+|----------+--------+--------------------------------------------|
+| Vesktop  | Keep   | Discord                                    |
+| ERC      | Keep   | IRC through soju; has the =C-c e l= helper |
+| rcirc    | Review | Also configured in Emacs                   |
+| ement.el | Keep   | Matrix                                     |
+
+* Documents and media
+
+| Tool                | Status       | Note                                    |
+|---------------------+--------------+-----------------------------------------|
+| zathura             | Keep         | PDF viewer; synctex hook for LaTeX      |
+| emacs-reader        | Review       | PDF viewer inside Emacs (hand-packaged) |
+| mpv                 | Keep         | Video and audio                         |
+| EMMS                | Review       | Music in Emacs; mpv already plays audio |
+| swayimg             | Keep         | Image viewer                            |
+| pinta               | Keep (niche) | Image editing                           |
+| LibreOffice, pandoc | Keep         | Office formats and conversion           |
+
+* Terminal, shell and system tools
+
+| Tool                               | Status | Note                                                                         |
+|------------------------------------+--------+------------------------------------------------------------------------------|
+| foot                               | Keep   | Default terminal (=xdg-terminal-exec=)                                       |
+| kitty                              | Review | Module disabled, but still pinned in the Noctalia dock                       |
+| fzf                                | Review | Overlaps with television                                                     |
+| television                         | Review | Overlaps with fzf; also hosts the nix-search-tv integration                  |
+| bottom, htop                       | Review | One monitor is enough; Noctalia's bar already shows CPU, RAM and temperature |
+| gdu                                | Keep   | Disk usage                                                                   |
+| carapace, zoxide, starship, direnv | Keep   | Completion, directory jumping, prompt, per-project environments              |
+
+* Desktop services
+
+| Tool                                               | Status       | Note                                                     |
+|----------------------------------------------------+--------------+----------------------------------------------------------|
+| udiskie, devmon, gvfs / udisks2                    | Review       | Three automount paths; keep udiskie or devmon, not both  |
+| batsignal, upower actions, Noctalia battery widget | Review       | Three battery alert systems with different thresholds    |
+| wlr-which-key                                      | Keep         | Browser menu; the session menu is not bound to a key yet |
+| Noctalia launcher, xdg-launcher (Emacs)            | Keep (niche) | Different contexts                                       |
+
+* Browsers and files
+
+| Tool        | Status       | Note                                      |
+|-------------+--------------+-------------------------------------------|
+| Firefox     | Keep         | Daily driver                              |
+| qutebrowser | Keep (niche) | Keyboard-driven, Emacs-style bindings     |
+| w3m         | Keep (niche) | Text-mode fallback with privacy redirects |
+| Dired       | Keep         | Primary file manager                      |
+| PCManFM     | Keep (niche) | GUI fallback                              |
+
+* Version control
+
+| Tool                   | Status | Note                                |
+|------------------------+--------+-------------------------------------|
+| Magit, majutsu         | Keep   | Git and Jujutsu inside Emacs        |
+| gh, gh-dash, gh-notify | Review | Triage overlaps with forge in Emacs |
+| forge                  | Review | See above                           |
+
+* Duplicated configuration (same thing set up twice)
+
+- [ ] Nix settings, registry, =nh=, nix-index and comma are declared in both NixOS and home-manager ([[../modules/nixsettings.nix][nixsettings.nix]]); comma is also enabled in [[../modules/shell/module.nix][shell/module.nix]].
+- [ ] =nh clean= is scheduled in both layers.
+- [ ] bat, vivid, television, zoxide, direnv, starship and git exist in both layers.
+- [ ] Wayland environment variables are set system-wide and in home-manager, and =GDK_BACKEND= differs between the two.
+- [ ] =playerctld= and impala/iwd tooling are enabled in more than one place.
+- [ ] =Mod+M= and =Mod+Ctrl+F= are both "toggle maximize".
+
+Rule of thumb for fixing these: services, PAM, firewall and kernel go in the NixOS layer; everything user-facing goes in home-manager.

@@ -850,10 +850,6 @@
       (?h . "HACK"))
     "Default mapping of narrow and keywords."))
 
-(use-package pomo-cat
-  :custom
-  (pomo-cat-use-dedicated-frame t))
-
 (use-package xdg-launcher)
 
 (use-package colorful-mode

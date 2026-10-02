@@ -22,6 +22,9 @@
         ddcui
       ];
 
+      # Integrate accounts and calendar.
+      accounts.calendar.accounts.Personal.noctalia.enable = true;
+
       programs.noctalia = {
         enable = true;
         systemd.enable = true;

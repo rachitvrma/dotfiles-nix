@@ -7,6 +7,7 @@
       };
     };
     accounts = {
+      calendar.basePath = ".calendar";
       email.accounts.Personal = {
         realName = "Rachit Kumar Verma";
         address = "rachitverma1122@gmail.com";

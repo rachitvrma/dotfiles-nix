@@ -121,27 +121,6 @@
         enable = true;
 
       };
-      clock-rs = {
-        enable = true;
-        settings = {
-          general = {
-            color = "magenta";
-            interval = 250;
-            blink = true;
-            bold = true;
-          };
-          position = {
-            horizontal = "center";
-            vertical = "center";
-          };
-          date = {
-            fmt = "%A, %B %d, %Y";
-            use_12h = true;
-            utc = false; # Display the system time.
-            hide_seconds = false;
-          };
-        };
-      };
       devenv = {
         enable = true;
 

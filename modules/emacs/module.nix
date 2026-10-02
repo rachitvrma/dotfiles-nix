@@ -155,6 +155,7 @@
               nerd-icons-ibuffer
               nerd-icons-xref
 
+              nix-mode # Nix src blocks require nix-mode to be present in the Emacs load path
               nix-ts-mode
               no-littering
               orderless
@@ -162,8 +163,6 @@
               page-break-lines
               password-store # An interface within emacs to interact with the GNU pass-cli
               pinentry # For pinentry
-              pomo-cat # A cute kitty pomodoro timer
-              posframe # NOTE IDK what it does... Just a dependency
               pulsar # make it shine when you change point
               pyvenv # For working with python virtual environments
               rainbow-delimiters

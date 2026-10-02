@@ -219,21 +219,8 @@ layer = "overlay"
 [osd]
 # background_opacity = 0.94999999999999996
 
-[plugin_settings."thepunkoff/pomodoro"]
-auto-start-breaks = true
-auto-start-work = true
-bypass-noctalia-sound-globals = true
-enable-work-timer-sound = true
-use-bundled-alarm-sound = true
-
-
 [plugins]
-enabled = [
-  "noctalia/kaomoji",
-  "noctalia/timer",
-  "noctalia/umbriel-companion",
-  "thepunkoff/pomodoro",
-]
+enabled = ["noctalia/kaomoji", "noctalia/timer", "noctalia/umbriel-companion"]
 
 [shell]
 font_family = "JetBrainsMono Nerd Font"
@@ -301,9 +288,6 @@ show_value = false
 
 [widget.volume]
 show_label = false
-
-[widget.widget]
-type = "thepunkoff/pomodoro:widget"
 
 [widget.workspaces]
 active_pill_size = 3.0

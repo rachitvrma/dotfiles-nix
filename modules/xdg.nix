@@ -56,7 +56,7 @@
         createDirectories = true;
         extraConfig = {
           MISC = "${config.home.homeDirectory}/Misc";
-          NOTES = "${config.home.homeDirectory}/Notes";
+          ORG = "${config.home.homeDirectory}/org";
         };
         setSessionVariables = true;
       };

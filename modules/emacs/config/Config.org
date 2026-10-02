@@ -1183,18 +1183,6 @@ This provides a better =*help*= interface.
 
 #+end_src
 
-** =pomo-cat=
-
-It's a small Pomodoro timer.
-
-#+begin_src emacs-lisp
-
-  (use-package pomo-cat
-    :custom
-    (pomo-cat-use-dedicated-frame t))
-
-#+end_src
-
 ** XDG Launcher
 
 This is not in =nixpkgs= yet.

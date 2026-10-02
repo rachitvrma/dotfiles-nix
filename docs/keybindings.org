@@ -1,0 +1,129 @@
+#+TITLE: Keybindings
+
+Back to the [[../README.org][README]]. This page lists bindings as they are written in the configs. When in doubt the config is the authority; =Mod+Slash= opens the compositor's own cheatsheet.
+
+* Compositor (umbriel)
+
+Source: [[../modules/desktop/noctalia/umbriel/config/keybinds.toml][keybinds.toml]].
+
+** Applications and session
+
+| Keys               | Action                                    |
+|--------------------+-------------------------------------------|
+| =Mod+Return=       | New Emacs frame (=emacsclient=)           |
+| =Mod+T=            | Terminal (=xdg-terminal-exec=, i.e. foot) |
+| =Mod+E=            | PCManFM                                   |
+| =Mod+D=            | Noctalia launcher                         |
+| =Mod+B=            | Browser menu (see which-key below)        |
+| =Mod+Q=            | Close window                              |
+| =Mod+Escape=       | Quit the session                          |
+| =Mod+Shift+Escape= | Toggle shortcut inhibition                |
+| =Mod+Slash=        | Cheatsheet                                |
+
+** Focus and movement
+
+| Keys                            | Action                                  |
+|---------------------------------+-----------------------------------------|
+| =Mod+H/J/K/L= or =Mod+Arrows=   | Focus left / down / up / right          |
+| =Mod+Shift+Arrows=              | Move column or window                   |
+| =Mod+F1=                        | Focus next window                       |
+| =Mod+Comma= / =Mod+Period=      | Consume window into column left / right |
+| =Mod+WheelUp= / =Mod+WheelDown= | Focus left / right                      |
+
+** Window state and layout
+
+| Keys                    | Action                                  |
+|-------------------------+-----------------------------------------|
+| =Mod+V=                 | Toggle floating                         |
+| =Mod+Shift+V=           | Switch focus between floating and tiled |
+| =Mod+P=                 | Toggle pinned                           |
+| =Mod+M=                 | Toggle maximize                         |
+| =Mod+Shift+M=           | Maximize to edges                       |
+| =Mod+F=                 | Toggle fullscreen                       |
+| =Mod+R= / =Mod+Shift+R= | Cycle column width forward / back       |
+| =Mod+O=                 | Overview                                |
+
+** Workspaces and scratchpad
+
+| Keys              | Action                                                     |
+|-------------------+------------------------------------------------------------|
+| =Mod+1..9=        | Switch to workspace (add =Shift= to move the window there) |
+| =Mod+I= / =Mod+U= | Previous / next workspace (add =Shift= to move the window) |
+| =Mod+Space=       | Toggle scratchpad                                          |
+| =Mod+Shift+Space= | Move window to scratchpad                                  |
+| =Mod+Ctrl+Space=  | Restore window from scratchpad                             |
+| =Mod+Tab=         | Focus next scratchpad window                               |
+
+** Media keys
+
+Brightness, volume and player keys call =noctalia msg= (brightness steps of 10).
+
+* which-key menus
+
+Source: [[../modules/desktop/wlr-which-key.nix][wlr-which-key.nix]].
+
+| Menu                          | Keys                                           |
+|-------------------------------+------------------------------------------------|
+| Browsers (=Mod+B=)            | =f= Firefox, =q= qutebrowser                   |
+| Session (run =wlr-which-key=) | =l= lock, =p= power off, =r= reboot, =s= sleep |
+
+* Noctalia panels
+
+Panels use Emacs-style navigation: =Ctrl+n/p/b/f= for down / up / left / right, =Escape= or =Ctrl+g= to cancel.
+
+* Emacs
+
+Source: [[../modules/emacs/config/Config.org][Config.org]]. Only the non-default bindings are listed.
+
+| Keys                        | Action                                       |
+|-----------------------------+----------------------------------------------|
+| =C-x g=                     | Magit status                                 |
+| =C-x j=                     | majutsu (Jujutsu)                            |
+| =C-x b=                     | consult-buffer                               |
+| =C-x C-b=                   | ibuffer                                      |
+| =C-x u=                     | vundo (undo tree)                            |
+| =C-x l=                     | Pulse current line                           |
+| =M-o=                       | ace-window                                   |
+| =C-:=                       | avy: jump to char                            |
+| =M-g w=                     | avy: jump to word                            |
+| =M-z=                       | avy-zap to char                              |
+| =M-g g= / =M-g o= / =M-g i= | consult: goto line / outline / imenu         |
+| =C-c a= / =C-c c=           | Org agenda / capture                         |
+| =C-c l a= / =f= / =r= / =d= | eglot: code actions / format / rename / docs |
+| =C-c z=                     | zoxide-travel                                |
+| =C-c t=                     | Neotree toggle                               |
+| =C-c n=                     | Newsticker tree view                         |
+| =C-c e l=                   | ERC: connect to Libera through soju          |
+
+* qutebrowser
+
+Source: [[../modules/browsers/qutebrowser/module.nix][qutebrowser/module.nix]]. The default normal-mode bindings are cleared and replaced with Emacs-style ones.
+
+| Keys                        | Action                                              |
+|-----------------------------+-----------------------------------------------------|
+| =C-x C-f=                   | Open URL in new tab (with =C-u=: current tab)       |
+| =C-l= / =M-l=               | Open URL / open URL in new tab                      |
+| =M-x=                       | Command line                                        |
+| =C-s= / =C-r=               | Search forward / backward                           |
+| =C-space=                   | Hint all links (with =C-u=: rapid, background tabs) |
+| =C-x b=                     | Buffer (tab) picker                                 |
+| =C-x 0= / =C-x 1= / =C-x k= | Close tab / close other tabs / close tab            |
+| =M-a= / =M-e=               | Previous / next tab                                 |
+| =M-w=                       | Yank URL                                            |
+| =C-v= / =M-v=               | Scroll half page down / up                          |
+| =C-x l=                     | Reload                                              |
+| =C-x C-c=                   | Quit                                                |
+
+* zathura
+
+Source: [[../modules/zathura.nix][zathura.nix]].
+
+| Keys            | Action                                 |
+|-----------------+----------------------------------------|
+| =C-n= / =C-p=   | Scroll down / up                       |
+| =C-b= / =C-f=   | Scroll left / right                    |
+| =f= / =F= / =c= | Follow link / display link / copy link |
+| =a= / =s=       | Fit best / fit width                   |
+| =M-<= / =M->=   | Go to top / bottom                     |
+| =C-c=           | Recolor                                |
+| =R=             | Reload                                 |

@@ -1,0 +1,96 @@
+#+TITLE: Architecture
+#+PROPERTY: header-args :mkdirp yes
+
+Back to the [[../README.org][README]].
+
+* Repository layout
+
+#+begin_example
+
+.
+├── flake.nix / flake.lock      # flake-parts entrypoint; auto-imports modules/
+├── README.org                  # overview and documentation index
+├── TODO.org                    # running task list
+├── docs/                       # all longer-form documentation (this folder)
+├── scripts/                    # helper scripts, tangled from docs/installation.org
+├── modules/
+│   ├── *.nix                   # flat, single-purpose modules
+│   ├── accounts/               # email account + pass
+│   ├── agenix/                 # secrets management + encrypted secrets
+│   ├── browsers/               # Firefox, w3m, qutebrowser, userChrome notes
+│   ├── desktop/                # common desktop bits, terminals, which-key
+│   │   ├── noctalia/           # Noctalia shell + greeter
+│   │   │   └── umbriel/        # compositor module + TOML config fragments
+│   │   └── terminal/           # foot, kitty, xdg-terminal-exec
+│   ├── discord/                # Vesktop + Vencord
+│   ├── emacs/                  # org-tangled Emacs config + hand-packaged elisp
+│   ├── experimental/           # home-manager module for umbriel (upstream candidate)
+│   ├── hosts/nixpavilion/      # host-specific config, disko layout, hardware scan
+│   ├── impala/                 # iwd TUI settings
+│   ├── shell/                  # bash, direnv, starship, CLI toolbox
+│   └── users/                  # per-user accounts and home-manager entrypoints
+└── LICENSE
+
+#+end_example
+
+* How modules are wired
+
+- =flake.nix= collects every =.nix= file under the repo with =lib.fileset=. Three kinds of file are skipped: =flake.nix= itself, any =secrets.nix= (agenix recipient lists), and any file whose /name/ starts with =_= (used for helper files that are =import=-ed or =callPackage=-d by hand, such as =modules/emacs/packages/_default.nix=).
+- Each module exposes =flake.nixosModules.<name>= and/or =flake.homeModules.<name>=.
+- [[../modules/nixos.nix][modules/nixos.nix]] builds =nixosConfigurations.nixpavilion= from /all/ =nixosModules= and gives the user /all/ =homeModules=. There is no per-host opt-in: if a module exists, it is enabled. To turn something off, set its =enable = false= inside the module (as is done for [[../modules/desktop/terminal/kitty.nix][kitty.nix]]) rather than deleting the file.
+- Home-manager runs as a NixOS module (=useGlobalPkgs=, =useUserPackages=). Clobbered files are moved to the trash (=backupCommand=) instead of leaving =.hm-bak= clutter.
+
+* Adding a module
+
+Create =modules/<anything>.nix= (or a folder) with this shape; it is picked up on the next rebuild:
+
+#+begin_src nix
+
+  {
+    flake.nixosModules.example = { pkgs, ... }: {
+      environment.systemPackages = [ pkgs.hello ];
+    };
+
+    flake.homeModules.example = { pkgs, ... }: {
+      programs.bat.enable = true;
+    };
+  }
+
+#+end_src
+
+Remember that new files must be =git add=-ed before a flake build can see them. Helper files that should /not/ be auto-imported get a leading underscore.
+
+* Notable modules
+
+| Module              | What it does                                                                                                                                                                                                                                                  |
+|---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [[../modules/stylix.nix][stylix.nix]]          | System-wide theming, shared between NixOS and home-manager. See [[./theming.org][theming]]                                                                                                                                                                                       |
+| [[../modules/browsers][browsers/module.nix]] | Privacy-hardened Firefox: telemetry off, forced extensions (uBlock, Dark Reader), custom search engines (Noogle, NixOS/HM options, etc.), vertical tabs, =w3m= as a text-mode fallback with redirect rules to privacy frontends. qutebrowser lives next to it |
+| [[../modules/desktop/noctalia][desktop/noctalia/]]   | Noctalia shell (bar with capsule groups, auto-hiding dock, idle/lock policy, plugins) and its greeter; the umbriel compositor config is split into small TOML fragments under =umbriel/config/= and merged at build time, with colours injected from Stylix   |
+| [[../modules/desktop/wlr-which-key.nix][wlr-which-key.nix]]   | Which-key style popup menus (browser chooser, session menu) themed from Stylix                                                                                                                                                                                |
+| [[../modules/emacs][emacs/]]              | Literate, org-tangled config (=Config.org= → =init.el= / =early-init.el=); all packages come from Nix, =package.el= disabled entirely. Two packages not in nixpkgs are packaged by hand in =packages/=                                                        |
+| [[../modules/agenix/module.nix][agenix/module.nix]]   | Encrypted secrets (age). See [[./secrets.org][secrets]]                                                                                                                                                                                                                          |
+| [[../modules/vcs.nix][vcs.nix]]             | Git + Jujutsu, GPG-signed commits, a stack of git aliases (=sync=, =up=, =stsh=, ...)                                                                                                                                                                         |
+| [[../modules/shell/module.nix][shell/module.nix]]    | The CLI toolbox (bat, eza, fd, ripgrep, fzf, television, nix-search-tv, comma, ...), shell aliases, EditorConfig defaults, and a daily timer that empties trash older than 30 days                                                                            |
+| [[../modules/nixsettings.nix][nixsettings.nix]]     | Nix settings, flake registry, =nh= (with automatic cleanup), nix-index / comma, and the =access-tokens.conf= include used by =nix-auth=                                                                                                                       |
+| [[../modules/hosts/nixpavilion][hosts/nixpavilion]]   | The one real host: disko partitioning (LUKS + btrfs subvolumes), hardware scan, kernel params (zswap, Plymouth splash)                                                                                                                                        |
+| [[../modules/keymap.nix][keymap.nix]]          | System + home-manager keyboard layout (Colemak-DH, ctrl/caps swap)                                                                                                                                                                                            |
+
+* Conventions worth knowing
+
+- *The repo must live at =~/etc/nixos=.* [[../modules/nixos.nix][modules/nixos.nix]] (=dotfilesDir=), =nh=, and the Emacs module (out-of-store symlinks for =init.el= / =early-init.el=) all assume that path. [[../scripts/00-move_nixos-config.sh][scripts/00-move_nixos-config.sh]] sets it up.
+- *Editing =Config.org= needs no rebuild.* The Emacs init files are symlinked straight into the working tree. Saving =Config.org= re-tangles it (=org-auto-tangle=); run =remacs= to restart the Emacs daemon.
+- *The username =krish= is hard-coded in several places* (see below).
+
+* Adapting this config to another user
+
+Search the tree for the string =krish= and replace it. The places that matter:
+
+- [[../modules/users/krish.nix][modules/users/krish.nix]] --- the account itself. *Change =initialPassword= (it is a placeholder) or remove it and use =passwd= after install.*
+- [[../modules/nixos.nix][modules/nixos.nix]] --- =dotfilesDir= and =home-manager.users.krish=.
+- [[../modules/nixsettings.nix][modules/nixsettings.nix]] --- =trusted-users= and the =nh= flake path.
+- [[../modules/desktop/commonDesktop.nix][commonDesktop.nix]], [[../modules/desktop/noctalia/greeter.nix][noctalia/greeter.nix]], [[../modules/desktop/noctalia/noctalia-config.toml][noctalia-config.toml]] --- avatar, greeter user, wallpaper directory.
+- [[../modules/virtualisation.nix][modules/virtualisation.nix]] --- extra groups.
+- [[../modules/agenix/secrets/secrets.nix][agenix/secrets/secrets.nix]] --- the public key the secrets are encrypted to. Re-encrypt the =.age= files with your own key (=agenix -r=) or delete the secrets you do not need.
+
+For a second machine see [[./new-host.org][new-host]].

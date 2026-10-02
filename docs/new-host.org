@@ -1,0 +1,45 @@
+#+TITLE: Adding a second host
+
+Back to the [[../README.org][README]].
+
+*Heads up:* the repo is currently single-host by design. [[../modules/nixos.nix][modules/nixos.nix]] imports /every/ entry of =self.nixosModules= into =nixpavilion=, and that includes the host-specific modules (hostname, bootloader, kernel params, disko layout, GPU packages, the laptop-only [[../modules/battery.nix][battery]] module). A second =nixosConfiguration= built the same way would inherit all of that. The steps below include the small refactor that is needed first.
+
+* 1. Separate shared modules from host modules
+
+- Keep modules that make sense on every machine (shell, theming, Emacs, networking, ...) in the shared set.
+- Move hostname, bootloader, kernel, disko and hardware into per-host modules, for example =flake.nixosModules.host-nixpavilion= and =flake.nixosModules.host-<name>=.
+- In =nixos.nix= build each host from the shared modules plus its own host module instead of =builtins.attrValues self.nixosModules=. A small helper function that takes the host name keeps this tidy.
+- Decide the same for home-manager: =self.homeModules= is also applied wholesale today.
+
+* 2. Create the host directory
+
+#+begin_example
+
+modules/hosts/<name>/
+├── configuration.nix          # hostname, boot, hardware-specific services
+├── disko-config.nix           # partition layout
+└── hardware-configuration.nix # from nixos-generate-config
+
+#+end_example
+
+Generate the hardware file on the target machine:
+
+#+begin_src sh
+
+  nixos-generate-config --root /mnt --no-filesystems --show-hardware-config
+
+#+end_src
+
+(=--no-filesystems= because disko declares the filesystems.)
+
+* 3. Host-specific values to revisit
+
+- =nix.settings.cores= and =max-jobs= (set per host in the current configuration).
+- GPU packages and kernel parameters.
+- Whether the laptop-only battery module applies.
+- Monitor names in the Noctalia lock-screen widgets (they are keyed by output, e.g. =eDP-1= and =HDMI-A-1=) and in [[../modules/desktop/noctalia/umbriel/config/outputs.toml][outputs.toml]].
+- agenix recipients: add the new machine's SSH public key to =secrets.nix= and re-encrypt (=agenix -r=).
+
+* 4. Install
+
+Follow [[./installation.org][installation]] with =#<name>= in the flake reference.

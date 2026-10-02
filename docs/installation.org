@@ -1,0 +1,166 @@
+#+TITLE: Installation
+#+PROPERTY: header-args :mkdirp yes
+#+auto_tangle: t
+
+Back to the [[../README.org][README]]. The scripts in this file are org-tangled into [[../scripts][scripts/]] (note the =../= in the tangle paths: they are relative to this file).
+
+#+begin_quote
+Assumes an installer ISO is already booted. See the [[https://nixos.org/manual/nixos/stable/][NixOS Manual]] for more general background.
+#+end_quote
+
+* 🧪 Enable experimental features
+
+Flakes and the =nix= command aren't on by default:
+
+#+begin_src sh
+
+  sudo -i
+  export NIX_CONFIG="experimental-features = nix-command flakes"
+
+#+end_src
+
+* ↙️ Clone this repo
+
+#+begin_src sh
+
+  mkdir -p /tmp
+  cd /tmp
+  git clone --depth=1 https://github.com/rachitvrma/dotfiles.git
+
+#+end_src
+
+The flake also pulls =github:rachitvrma/Wallpapers= (a plain, non-flake input) for the Stylix wallpaper, so the first build needs network access to it.
+
+* 💾 Partition with Disko
+
+Run the latest [[https://github.com/nix-community/disko][nix-community/disko]] rather than the nixpkgs-pinned version. Confirm =disko-config.nix= matches the target host (defaults to [[../modules/hosts/nixpavilion][nixpavilion]]):
+
+#+begin_src sh
+
+  cd /tmp/dotfiles/modules/hosts/nixpavilion
+  nix run github:nix-community/disko/latest -- --mode destroy,format,mount ./disko-config.nix
+
+#+end_src
+
+* 🐧 Install
+
+#+begin_src sh
+
+  mkdir -p /mnt/etc
+  cp -r /tmp/dotfiles /mnt/etc/nixos
+  nixos-install --no-root-passwd --root /mnt --cores 8 --max-jobs 1 --flake /mnt/etc/nixos#nixpavilion
+  umount -R /mnt
+  reboot
+
+#+end_src
+
+* 💻 Post-install
+
+** Set your password
+
+The account is created with a placeholder =initialPassword= (see [[../modules/users/krish.nix][users/krish.nix]]). Replace it right away:
+
+#+begin_src sh
+
+  passwd $USER
+
+#+end_src
+
+** Edit config without =sudo=
+
+Move =/etc/nixos= into your home directory so you can edit and rebuild without root ([[https://wiki.nixos.org/wiki/NixOS_configuration_editors#Editing_as_normal_user][source]]). The location matters: several modules assume the repo lives at =~/etc/nixos= (see [[./architecture.org][architecture]]).
+
+#+begin_src sh :tangle ../scripts/00-move_nixos-config.sh :tangle-mode (identity #o755)
+
+  #!/usr/bin/env bash
+
+  mkdir ~/etc
+  sudo mv /etc/nixos ~/etc/
+  sudo chown -R $(id -un):users ~/etc/nixos
+  sudo ln -s ~/etc/nixos /etc/
+
+#+end_src
+
+** GPG / pass / agenix restoration
+
+#+begin_quote
+*Important:* Do this before the first =home-manager switch= / =nh os switch= after a reinstall --- Nix can't manage your secret key material, and =pass= and the email module's =passwordCommand= will both fail (blocking the rebuild) until the GPG key is restored.
+#+end_quote
+
+Before wiping the old system:
+
+#+begin_src sh
+
+  gpg --export-secret-keys --armor > gpg-backup.asc
+
+#+end_src
+
+Also make sure =~/.password-store= is backed up or pushed to a remote --- the key alone decrypts nothing without the encrypted store itself.
+
+The agenix secrets are encrypted to a single SSH ed25519 public key, so the matching /private/ key must be backed up too. By default agenix looks for it at =~/.ssh/id_ed25519=. Without it the YouTube Music secrets will not decrypt after reinstall. Background on how the three pieces fit together: [[./secrets.org][secrets]].
+
+After reinstall, before rebuilding:
+
+#+begin_src sh
+
+  gpg --import gpg-backup.asc
+  gpg --edit-key <keyid> trust   # choose 5 (ultimate)
+  git clone <your-pass-store-remote> ~/.password-store
+  # restore the agenix identity and lock it down
+  install -m 600 <backup>/id_ed25519 ~/.ssh/id_ed25519
+
+#+end_src
+
+** TODO Soju IRC client setup
+
+** Generate access tokens for the Nix command and Devenv
+
+Devenv (and Nix as well) may start hitting rate limits when using them without tokens. To meet that problem, we can use the [[https://github.com/numtide/nix-auth][nix-auth]] CLI. Run the following commands (also org-tangled to the [[file:../scripts/generate-nix-access-tokens.sh][scripts]] directory). By default it uses GitHub as its provider.
+
+The script records which =nix.conf.backup*= files exist before logging in, so that only the backups created by this run are offered for removal later.
+
+#+begin_src bash :tangle ../scripts/generate-nix-access-tokens.sh :tangle-mode (identity #o755)
+
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  conf_dir="${XDG_CONFIG_HOME:-$HOME/.config}/nix"
+
+  # Unmatched globs expand to nothing instead of the literal pattern
+  shopt -s nullglob
+
+  declare -A existing
+  for f in "$conf_dir"/nix.conf.backup*; do
+      existing[$f]=1
+  done
+
+  nix run github:numtide/nix-auth -- login
+
+#+end_src
+
+It tries to modify home-manager generated =nix.conf= and then throws a warning about not being able to modify that file. The =access-tokens.conf= file is generated no matter. If desired the backup file can be removed, and the script asks for confirmation before deleting anything.
+
+#+begin_src bash :tangle ../scripts/generate-nix-access-tokens.sh
+
+  new_backups=()
+  for f in "$conf_dir"/nix.conf.backup*; do
+      if [[ -z ${existing[$f]:-} ]]; then
+          new_backups+=("$f")
+      fi
+  done
+
+  if (( ${#new_backups[@]} == 0 )); then
+      echo "No new backup files found, nothing to remove."
+      exit 0
+  fi
+
+  echo "Backup files generated by nix-auth:"
+  printf '  %s\n' "${new_backups[@]}"
+
+  read -r -p "Remove them? [Y/n] " answer
+  case "${answer,,}" in
+      ""|y|yes) rm -f -- "${new_backups[@]}" && echo "Removed." ;;
+      ,*)        echo "Left in place." ;;
+  esac
+
+#+end_src

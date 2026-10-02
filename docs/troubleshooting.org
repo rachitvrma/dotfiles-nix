@@ -1,0 +1,43 @@
+#+TITLE: Troubleshooting
+
+Back to the [[../README.org][README]]. Known gotchas, most of them collected from comments in the modules.
+
+* The flake does not see my new file
+
+Flakes only see files tracked by git. Run =git add= on the new module before rebuilding.
+
+* Rebuild fails right after a reinstall
+
+The email account runs =pass show email/gmail= and the secrets need the agenix SSH key. Restore the GPG key, the password store and the SSH key first. See [[./installation.org][installation]].
+
+* Nix is rate limited (GitHub API)
+
+Run [[../scripts/generate-nix-access-tokens.sh][generate-nix-access-tokens.sh]]. It creates =access-tokens.conf=, which [[../modules/nixsettings.nix][nixsettings.nix]] includes. =nix-auth= also tries to edit the home-manager generated =nix.conf=, fails with a warning and leaves a =nix.conf.backup*= file; the script offers to remove it. The token file is still generated.
+
+* The Wallpapers input fails to fetch
+
+The =wallpapers= input is a plain (non-flake) GitHub repo. Make sure it is reachable and has been fetched before the build, as noted in [[../flake.nix][flake.nix]].
+
+* Emacs does not pick up my config changes
+
+Config files are symlinked from the working tree, so there is nothing to rebuild; run =remacs= to restart the daemon. If the symlinks are dangling, the repo is not at =~/etc/nixos=. See [[./architecture.org][architecture]].
+
+* emacs-reader fails to build with a require error
+
+The package's =reader-bookmark.el=, =reader-outline.el= and =reader-saveplace.el= require =reader= at the top level, which is not on the load path during the ELPA install step. =ignoreCompilationError = true= in [[../modules/emacs/packages/_emacs-reader.nix][_emacs-reader.nix]] works around it; the require resolves fine at runtime.
+
+* virt-manager: unable to find EFI firmware
+
+Happens after garbage collection removes the firmware path a VM definition points to. See the link at the top of [[../modules/virtualisation.nix][virtualisation.nix]] (NixOS wiki, Virt-manager page).
+
+* kitty breaks GTK theming
+
+Enabling kitty's desktop integration messed with GTK theming, so it is left off in [[../modules/desktop/terminal/kitty.nix][kitty.nix]] (the module itself is also disabled).
+
+* Gaming problems with the Intel xe driver
+
+A kernel parameter for the Intel GPU is commented out in [[../modules/hosts/nixpavilion/configuration.nix][configuration.nix]] with a note that enabling xe caused problems in games.
+
+* dprint plugins do not update
+
+A known limitation: [[../modules/dprint.nix][dprint.nix]] needs an activation script so plugins refresh every time. It is listed as a TODO in the file.

@@ -1,0 +1,36 @@
+#+TITLE: Daily usage
+
+Back to the [[../README.org][README]]. Keybindings live in [[./keybindings.org][keybindings]].
+
+* Shell aliases and helpers
+
+| Command          | What it does                                                                                                            |
+|------------------+-------------------------------------------------------------------------------------------------------------------------|
+| =nos=            | nh os switch = -(rebuild and switch(the flake path is preconfigured))                                                   |
+| =nca=            | =nh clean all= --- garbage-collect old generations                                                                      |
+| =remacs=         | Restart the Emacs daemon after a rebuild or config change                                                               |
+| =ff=             | fastfetch                                                                                                               |
+| =yt-music <url>= | Download audio from YouTube Music as Opus into =~/Downloads/Music=, keeping an archive file so nothing is fetched twice |
+| =yt-playlist=    | yt-dlp wrapper for playlists                                                                                            |
+| =trash=          | Move files to the trash instead of deleting; emptied automatically after 30 days                                        |
+#+TBLFM: $2=nh os switch= --- rebuild and switch (the flake path is preconfigured)
+
+* Updating
+
+#+begin_src sh
+
+  cd ~/etc/nixos
+  nix flake update
+  nos
+
+#+end_src
+
+* Where things live
+
+| Thing                | Location                                                   |
+|----------------------+------------------------------------------------------------|
+| Org files and agenda | =~/org= (=ORG= in the XDG user dirs)                       |
+| Misc files           | =~/Misc=                                                   |
+| Downloads (aria2)    | the XDG download directory                                 |
+| Music downloads      | =~/Downloads/Music=                                        |
+| Emacs config         | =modules/emacs/config/= (symlinked into =~/.config/emacs=) |

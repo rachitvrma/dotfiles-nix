@@ -1,0 +1,44 @@
+#+TITLE: Theming
+
+Back to the [[../README.org][README]].
+
+Everything starts at [[../modules/stylix.nix][stylix.nix]]. The same settings are applied to NixOS and home-manager through a shared function, so the two layers cannot drift apart.
+
+* The base
+
+| Setting   | Value                                                                             |
+|-----------+-----------------------------------------------------------------------------------|
+| Scheme    | =onedark= (base16, from =pkgs.base16-schemes=)                                    |
+| Polarity  | dark                                                                              |
+| Wallpaper | from the =wallpapers= flake input                                                 |
+| Cursor    | phinger-cursors-light, size 32                                                    |
+| Icons     | Papirus (blue folders), Dark and Light variants                                   |
+| Fonts     | JetBrainsMono Nerd Font for serif, sans and monospace; Noto Color Emoji for emoji |
+| Opacity   | desktop 0.9, terminal 0.9, popups 0.9, applications 0.95                          |
+
+A Gruvbox icon set is kept commented out in the same file as an alternative.
+
+* What consumes the palette
+
+| Consumer             | How                                                                                                                                                                                                |
+|----------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| umbriel (compositor) | [[../modules/desktop/noctalia/umbriel/umbriel.nix][umbriel.nix]] maps base16 slots to its colour keys: base00 background, base05 text, base0E accent and focused border, base0A secondary accent, base09 warning, base08 error, base02 unfocused border |
+| wlr-which-key        | [[../modules/desktop/wlr-which-key.nix][wlr-which-key.nix]] reads the palette directly (background with alpha, base0E border)                                                                                                                |
+| Noctalia shell       | Built-in and community templates are disabled in [[../modules/desktop/noctalia/shell.nix][shell.nix]] so Stylix stays in charge                                                                                                               |
+| Noctalia greeter     | =scheme = "Synced"=, plus =auto_sync= in the shell config, so it follows the shell                                                                                                                 |
+| GTK 2/3/4            | Dark colour scheme, =adw-gtk3= name forwarded through =xsettingsd=, Emacs key theme                                                                                                                |
+| Qt                   | Kvantum; standard dialogs go through the desktop portal                                                                                                                                            |
+| cava                 | Stylix rainbow target enabled                                                                                                                                                                      |
+| Firefox              | A Stylix Firefox target is configured in [[../modules/browsers/module.nix][browsers/module.nix]]                                                                                                                                       |
+
+* Deliberately not Stylix
+
+- *Emacs:* =stylix.targets.emacs.colors.enable = false=. Emacs loads =doom-one= itself, which is a close match for One Dark.
+
+* Hand-themed (candidates for moving onto the palette)
+
+- [[../modules/impala/impala.toml][impala.toml]] uses terminal colour names.
+- [[../modules/python.nix][python.nix]] sets matplotlib to orange on black.
+- [[../modules/discord/module.nix][discord/module.nix]] has a hard-coded splash background.
+- The README banner in [[../README.org][README.org]] uses Gruvbox colours (=d3869b= and =89b482=).
+- [ ] Decide whether to retint these or switch the scheme.
