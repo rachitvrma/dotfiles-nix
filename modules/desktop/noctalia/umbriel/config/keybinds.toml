@@ -5,6 +5,7 @@
 "Mod+T" = { action = "spawn:xdg-terminal-exec" }
 "Mod+D" = "spawn:noctalia msg panel-toggle launcher"
 "Mod+B" = { action = "spawn:wlr-which-key browsers" }
+"Mod+X" = { action = "spawn:wlr-which-key", repeat = false }                                              # Default config is power menu
 "Mod+Q" = { action = "window-close", repeat = false }
 "Mod+Escape" = "session-quit"
 "Mod+Shift+Escape" = { action = "shortcuts-inhibit-toggle", allow_when_inhibited = true, repeat = false }
@@ -85,3 +86,6 @@
 
 # Toggle cheatsheet
 "Mod+Slash" = "cheatsheet-toggle"
+
+# Spawn nix-search-tv. See the window_rules file to configure how the window appears
+"Mod+N" = "spawn:footclient --app-id=nix-search-tv --title=nix-search-tv -e tv nix-search-tv"

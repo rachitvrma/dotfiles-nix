@@ -13,6 +13,7 @@
         languagePacks = [ "en-US" ];
 
         policies = {
+          # see https://mozilla.github.io/policy-templates/ for a list of all policies
           # Updates & Background Services
           AppAutoUpdate = false;
           BackgroundAppUpdate = false;
@@ -40,9 +41,28 @@
           # UI and Behavior
           DisplayMenuBar = "never";
           DontCheckDefaultBrowser = true;
-          HardwareAcceleration = false;
+          HardwareAcceleration = true;
           OfferToSaveLogins = false;
           DefaultDownloadDirectory = "${config.home.homeDirectory}/Downloads";
+          FirefoxHome = {
+            Search = true;
+            TopSites = false;
+            SponsoredTopSites = false;
+            Highlights = false;
+            Pocket = false;
+            Stories = false;
+            SponsoredStories = false;
+            Snippets = false;
+            Locked = true;
+          };
+
+          # Disable PDF Support
+          PDFjs = {
+            Enabled = false;
+            EnablePermissions = false;
+          };
+
+          StartDownloadsInTempDirectory = true; # Start the download in temp directory.
 
           # Extensions
           ExtensionSettings =
@@ -164,6 +184,26 @@
                 definedAliases = [ "@nw" ];
               };
             };
+          };
+          settings = {
+            "browser.uiCustomization.horizontalTabstrip" = [
+              "tabbrowser-tabs"
+              "new-tab-button"
+              "customizableui-special-spring3"
+              "alltabs-button"
+              "smartwindow-group-tabs-button"
+              "ai-window-toggle"
+            ];
+
+            # Vertical Tabs & Sidebar Configuration
+            "sidebar.main.tools" = "syncedtabs,bookmarks,opentabs"; # syncedtabs -> tabs from other devices, bookmarks, and open tabs on the sidebar
+            "sidebar.new-sidebar.has-used" = true; # Don't show annoying messages like "OMGoodness! You enabled Vertical Tabs'n'shyte!"
+            "sidebar.position_start" = false; # Open it on the right side
+            "sidebar.verticalTabs" = true; # Enable vertical tabs, ofc _eyes_roll_
+            "sidebar.visibility" = "expand-on-hover"; # Expand it on hover.
+
+            # Security / Under-the-hood
+            "signon.storage.rust.active" = true; # Just use rust stuff...
           };
         };
       };

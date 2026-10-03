@@ -37,11 +37,18 @@
           };
 
           content = {
-            javascript.modal_dialog = true;
-            blocking.whitelist = [ ];
+            javascript = {
+              modal_dialog = true;
+              clipboard = "access";
+            };
+            blocking = {
+              whitelist = [ ];
+              method = "both";
+            };
+            webgl = false;
           };
-
           completion.height = "30%";
+          colors.webpage.darkmode.enabled = true;
         };
 
         aliases = {

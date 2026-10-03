@@ -1,8 +1,8 @@
+# Remember to change the default xdg-terminal-exec
 {
-  flake.homeModules.kitty = {
+  flake.homeModules.kitty = { config, ... }: {
     programs.kitty = {
       enable = false;
-      # enableDesktopIntegration = true; # WARNING: This thing kept me awake at night coz it messed with GTK theming
       actionAliases = {
         launch_tab = "launch --cwd=current --type=tab";
         launch_window = "launch --cwd=current --type=os-window";
@@ -17,6 +17,7 @@
 
         cursor_trail = 1;
         cursor_trail_decay = "0.1 0.4";
+        cursor_trail_color = config.lib.stylix.colors.withHashtag.base0E;
         cursor_trail_start_threshold = 2;
 
         tab_bar_style = "powerline";

@@ -1,5 +1,13 @@
+let
+  globalAliases = {
+    rm = "rm -i"; # use \rm -rf for removing a large dir or files without confirmation
+    cp = "cp -i";
+    mv = "mv -i";
+  };
+in
 {
   flake.nixosModules.shell = {
+    environment.shellAliases = globalAliases;
     programs = {
       comma = {
         enable = true;
@@ -7,11 +15,9 @@
       };
       television = {
         enable = true;
-
       };
       zoxide = {
         enable = true;
-
       };
       bat = {
         enable = true;
@@ -39,7 +45,8 @@
         nca = "nh clean all";
         cat = "bat --paging=never";
         sl = "sl -dFGl";
-      };
+      }
+      // globalAliases;
 
       packages = with pkgs; [
         figlet
